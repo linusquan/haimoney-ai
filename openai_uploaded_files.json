@@ -1,0 +1,23 @@
+{
+  "files": [
+    {
+      "id": "file-JgksmaesdMEJgYQPB7YUUE",
+      "filename": "002_TransactionSummary 2.pdf",
+      "original_path": "/Users/liquan/code/haimoney-ai/output/002_TransactionSummary 2.pdf",
+      "purpose": "assistants",
+      "uploaded_at": "2025-09-02T07:33:59.305759",
+      "size": 447422,
+      "status": "processed"
+    }
+  ],
+  "upload_sessions": [
+    {
+      "directory": "/Users/liquan/code/haimoney-ai/output",
+      "uploaded_at": "2025-09-02T07:33:59.306935",
+      "file_count": 1,
+      "file_ids": [
+        "file-JgksmaesdMEJgYQPB7YUUE"
+      ]
+    }
+  ]
+}
