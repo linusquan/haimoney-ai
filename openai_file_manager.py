@@ -99,113 +99,13 @@ class OpenAIFileManager:
         print(f"📊 Upload complete: {len(uploaded_files)} files uploaded")
         return uploaded_files
     
-    def create_chat_completion(self, prompt, file_ids=None, model=None):
-        """
-        Send a chat completion request to OpenAI
-        
-        Args:
-            prompt (str): The prompt to send
-            file_ids (list): List of file IDs to include (optional)
-            model (str): Model to use for completion
-        
-        Returns:
-            str: The response content
-        """
-        try:
-            # For file analysis, use the assistants API which supports file attachments
-            if file_ids:
-                # Create an assistant with file search capability
-                assistant = self.client.beta.assistants.create(
-                    name="Document Analyzer",
-                    instructions="You are an expert document analyzer. Analyze uploaded documents and provide comprehensive summaries, insights, and recommendations.",
-                    model=model,
-                    tools=[{"type": "file_search"}]
-                )
-                
-                # Create a thread
-                thread = self.client.beta.threads.create()
-                
-                # Filter files to only supported types for file search (PDFs, DOCX, etc.)
-                supported_extensions = ['.pdf', '.docx', '.txt', '.md', '.csv', '.xlsx']
-                supported_file_ids = []
-                
-                for file_id in file_ids:
-                    # Find file info from our records
-                    for file_record in self.uploaded_files["files"]:
-                        if file_record["id"] == file_id:
-                            filename = file_record["filename"].lower()
-                            if any(filename.endswith(ext) for ext in supported_extensions):
-                                supported_file_ids.append(file_id)
-                            break
-                
-                # Limit to max 10 files
-                limited_file_ids = supported_file_ids[:10]
-                
-                if len(file_ids) > len(supported_file_ids):
-                    print(f"⚠️  Filtered out {len(file_ids) - len(supported_file_ids)} unsupported files (PNG, JPEG not supported for search)")
-                if len(supported_file_ids) > 10:
-                    print(f"⚠️  Limiting to first 10 files (OpenAI max: 10, you have: {len(supported_file_ids)} supported files)")
-                
-                message = self.client.beta.threads.messages.create(
-                    thread_id=thread.id,
-                    role="user",
-                    content=prompt,
-                    attachments=[
-                        {"file_id": file_id, "tools": [{"type": "file_search"}]}
-                        for file_id in limited_file_ids
-                    ]
-                )
-                
-                # Run the assistant
-                run = self.client.beta.threads.runs.create_and_poll(
-                    thread_id=thread.id,
-                    assistant_id=assistant.id
-                )
-                
-                if run.status == 'completed':
-                    messages = self.client.beta.threads.messages.list(
-                        thread_id=thread.id
-                    )
-                    return messages.data[0].content[0].text.value
-                else:
-                    return f"Assistant run failed with status: {run.status}"
-            else:
-                # Fallback to regular chat completion without files
-                messages = [{"role": "user", "content": prompt}]
-                response = self.client.chat.completions.create(
-                    model=model,
-                    messages=messages
-                )
-                return response.choices[0].message.content
-            
-        except Exception as e:
-            print(f"❌ Error in chat completion: {str(e)}")
-            return None
-    
-    def list_uploaded_files(self):
-        """List all uploaded files"""
-        pass
-        # print("\n📋 Uploaded Files:")
-        # print("-" * 80)
-        
-        # for file_info in self.uploaded_files["files"]:
-        #     print(f"ID: {file_info['id']}")
-        #     print(f"Filename: {file_info['filename']}")
-        #     print(f"Original Path: {file_info['original_path']}")
-        #     print(f"Uploaded: {file_info['uploaded_at']}")
-        #     print(f"Size: {file_info.get('size', 'Unknown')} bytes")
-        #     print(f"Status: {file_info.get('status', 'Unknown')}")
-        #     print("-" * 40)
-    
     def get_all_file_ids(self):
         """Get all uploaded file IDs"""
         return [file_info["id"] for file_info in self.uploaded_files["files"]]
 
-
 def main():
     # Load environment variables
     load_dotenv()
-    
     # Get API key from environment variable
     API_KEY = os.getenv("apikey")
     if not API_KEY:
@@ -225,7 +125,7 @@ def main():
         uploaded_files = True  # Set to True to continue with chat completion
     else:
         # Upload files from the output directory
-        output_dir = "/Users/liquan/code/haimoney-ai/output"
+        output_dir = "./output"
         if os.path.exists(output_dir):
             uploaded_files = manager.upload_directory(output_dir)
             
@@ -239,28 +139,8 @@ def main():
             print(f"❌ Output directory not found: {output_dir}")
             print("Please run the file extraction script first or specify a different directory")
             return
-    
-    if uploaded_files and file_ids:
-        # Send a chat completion request with the uploaded files
-        with open("sample_prompt.txt", "r") as f:
-            prompt = f.read().strip()
-        
-        print("\n🤖 Sending chat completion request...")
-        response = manager.create_chat_completion(prompt, file_ids, model=MODEL)
-        
-        if response:
-            print("\n📝 OpenAI Response:")
-            print("=" * 80)
-            print(response)
-            print("=" * 80)
-        
-        # List all uploaded files
-        manager.list_uploaded_files()
-        
         print(f"\n💾 File IDs saved to: {manager.file_ids_file}")
         print("Use cleanup_openai_files.py to delete these files after testing")
-    else:
-        print("❌ No files available for chat completion")
 
 
 if __name__ == "__main__":
