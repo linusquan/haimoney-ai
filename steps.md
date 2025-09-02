@@ -5,6 +5,11 @@
 - Call file extraction 1 by 1 save then in each the output/extractions folder
 - in output/extractions under create a file extraction extract_meta.json where it contains all the list of file that are extracted, original path, extraction outcome.
 
+
+- try image extraction
+- try failed extraction
+
+
 # do not start yet
 
 3. aggregate all extraction, populate client infomation
