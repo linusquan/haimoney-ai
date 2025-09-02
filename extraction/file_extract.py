@@ -4,12 +4,12 @@ Single File Extraction Wrapper
 Focuses on extracting data from a single file using the existing OpenAI file management code.
 """
 import os
-import json
 import logging
 from dataclasses import dataclass
 from typing import Optional, TypedDict
 from dotenv import load_dotenv
 from openai import OpenAI
+from pydantic import BaseModel
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -17,6 +17,15 @@ logger = logging.getLogger(__name__)
 
 FILE_NUM_LIMIT = 20
 DEFAULT_MODEL = 'gpt-4o-mini'
+
+class ExtractionResponse(BaseModel):
+    """Pydantic model for structured extraction response"""
+    result: str
+    error: bool
+    errorReason: Optional[str] = None
+    
+    class Config:
+        extra = "forbid"
 
 class FileInfo(TypedDict):
     """Type definition for file information object"""
@@ -78,28 +87,17 @@ SYSTEM_PROMPT = f"""You are a financial document extraction specialist. Your tas
 
 Your response is a json structure that follows the defined json schema below:
 {{
-    "type": "json_schema",
-    "json_schema": {{
-        "name": "extraction_result",
-        "schema": {{
-            "type": "object",
-            "properties": {{
-                "result": {{
-                    "type": "string",
-                    "description": "The extracted content in markdown format"
-                }},
-                "error": {{
-                    "type": "boolean",
-                    "description": "If you cannot extract any useful information mark this true"
-                }},
-                "errorReason": {{
-                    "type": "string",
-                    "description": "reason of not able to extract"
-                }}
-            }},
-            "required": ["result", "error"],
-            "additionalProperties": false
-        }}
+    "result": {{
+        "type": "string",
+        "description": "The extracted content in markdown format"
+    }},
+    "error": {{
+        "type": "boolean",
+        "description": "If you cannot extract any useful information mark this true"
+    }},
+    "errorReason": {{
+        "type": "string",
+        "description": "reason of not able to extract"
     }}
 }}
 
@@ -158,15 +156,12 @@ class SingleFileExtractor:
             if response is None:
                 return ExtractionResult.error_result("Failed to get response from OpenAI", file_id, filename, original_path)
             
-            # Parse JSON response and extract the result field
-            try:
-                json_response = json.loads(response)
-                extracted_content = json_response.get("result", "")
-                return ExtractionResult.success_result(extracted_content, file_id, filename, original_path)
-            except json.JSONDecodeError:
-                # Fallback: treat as plain text if not valid JSON
-                logger.error("failed to extract json from output")
-                return ExtractionResult.error_result({"errorReason":  f"failed to parse {response}"}, file_id, filename, original_path)
+            # Check if extraction was successful based on the error flag
+            if response.error:
+                error_reason = response.errorReason or "Unknown extraction error"
+                return ExtractionResult.error_result(error_reason, file_id, filename, original_path)
+            else:
+                return ExtractionResult.success_result(response.result, file_id, filename, original_path)
                 
         except Exception as e:
             logger.error(f"Error during extraction: {str(e)}")
@@ -188,7 +183,7 @@ class SingleFileExtractor:
 
 def create_chat_completion(prompt, api_key, file_ids=None, model=None):
     """
-    Send a chat completion request to OpenAI with structured output
+    Send a chat completion request to OpenAI using responses.parse API with structured output
     
     Args:
         prompt (str): The prompt to send
@@ -197,7 +192,7 @@ def create_chat_completion(prompt, api_key, file_ids=None, model=None):
         model (str): Model to use for completion
     
     Returns:
-        str: The response content from structured output
+        ExtractionResponse: The structured response from OpenAI
     """
     if not api_key:
         raise ValueError("API key is required")
@@ -209,49 +204,34 @@ def create_chat_completion(prompt, api_key, file_ids=None, model=None):
     client = OpenAI(api_key=api_key)
     
     try:
-        # For file analysis, use the assistants API which supports file attachments
-        # Create an assistant with file search capability
-        assistant = client.beta.assistants.create(
-            name="Document Extractor",
-            instructions=SYSTEM_PROMPT,
-            model=model,
-            tools=[{"type": "file_search"}]
-        )
+        # Prepare content for the request
+        content = [{"type": "input_text", "text": f"{SYSTEM_PROMPT}\n\n{prompt}"}]
         
-        # Create a thread
-        thread = client.beta.threads.create()
-        
-        # Limit to max 10 files (OpenAI limit)
-        limited_file_ids = file_ids[:FILE_NUM_LIMIT]
-        
-        if len(file_ids) > FILE_NUM_LIMIT:
-            logger.warning(f"⚠️  Limiting to first 10 files (OpenAI max: 10, you have: {len(file_ids)} files)")
-
-        
-        client.beta.threads.messages.create(
-            thread_id=thread.id,
-            role="user",
-            content=prompt,
-            attachments=[
-                {"file_id": file_id, "tools": [{"type": "file_search"}]}
-                for file_id in limited_file_ids
-            ],
+        # Add file attachments if provided
+        if file_ids:
+            # Limit to max files to avoid API limits
+            limited_file_ids = file_ids[:FILE_NUM_LIMIT]
             
+            if len(file_ids) > FILE_NUM_LIMIT:
+                logger.warning(f"⚠️  Limiting to first {FILE_NUM_LIMIT} files (you have: {len(file_ids)} files)")
+
+            # Add each file as input_file
+            for file_id in limited_file_ids:
+                content.append({"type": "input_file", "file_id": file_id})
+        
+        # Use responses.parse API with structured output
+        response = client.responses.parse(
+            model=model,
+            input=[
+                {
+                    "role": "user", 
+                    "content": content
+                }
+            ],
+            text_format=ExtractionResponse,
         )
         
-        # Run the assistant
-        run = client.beta.threads.runs.create_and_poll(
-            thread_id=thread.id,
-            assistant_id=assistant.id
-        )
-        
-        if run.status == 'completed':
-            messages = client.beta.threads.messages.list(
-                thread_id=thread.id
-            )
-            return messages.data[0].content[0].text.value
-        else:
-            return f"Assistant run failed with status: {run.status}"
+        return response.output_parsed
             
     except Exception as e:
         logger.error(f"❌ Error in chat completion: {str(e)}")

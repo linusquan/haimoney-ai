@@ -8,9 +8,19 @@ import os
 from datetime import datetime
 from pathlib import Path
 from openai import OpenAI
+from pydantic import BaseModel
 from dotenv import load_dotenv
 
 MODEL='gpt-4o-mini'
+
+class FileAnalysis(BaseModel):
+    """Structured output model for file analysis"""
+    summary: str
+    file_count: int
+    key_insights: list[str]
+    
+    class Config:
+        extra = "forbid"
 
 class OpenAIFileManager:
     def __init__(self, api_key):
@@ -102,6 +112,44 @@ class OpenAIFileManager:
     def get_all_file_ids(self):
         """Get all uploaded file IDs"""
         return [file_info["id"] for file_info in self.uploaded_files["files"]]
+    
+    def analyze_files_structured(self, prompt="Analyze the uploaded files and provide insights"):
+        """Analyze uploaded files using structured output via responses API"""
+        file_ids = self.get_all_file_ids()
+        
+        if not file_ids:
+            print("❌ No files uploaded yet")
+            return None
+        
+        try:
+            print(f"🔍 Analyzing {len(file_ids)} files with structured output...")
+            
+            # Create content with all files
+            content = []
+            for file_id in file_ids:
+                content.append({"type": "input_file", "file_id": file_id})
+            
+            # Add the prompt
+            content.append({"type": "input_text", "text": prompt})
+            
+            # Use responses API with structured output
+            response = self.client.responses.parse(
+                model=MODEL,
+                input=[
+                    {
+                        "role": "user",
+                        "content": content
+                    }
+                ],
+                text_format=FileAnalysis,
+            )
+            
+            print("📊 Analysis complete!")
+            return response.output_parsed
+            
+        except Exception as e:
+            print(f"❌ Error during analysis: {str(e)}")
+            return None
 
 def main():
     # Load environment variables
@@ -141,6 +189,21 @@ def main():
             return
         print(f"\n💾 File IDs saved to: {manager.file_ids_file}")
         print("Use cleanup_openai_files.py to delete these files after testing")
+        
+        # Demonstrate structured analysis
+        if uploaded_files or existing_file_ids:
+            print("\n🔍 Running structured analysis...")
+            analysis = manager.analyze_files_structured(
+                "Provide a comprehensive analysis of these files including summary, key insights, and file count."
+            )
+            
+            if analysis:
+                print("\n📊 Analysis Results:")
+                print(f"Summary: {analysis.summary}")
+                print(f"File Count: {analysis.file_count}")
+                print("Key Insights:")
+                for i, insight in enumerate(analysis.key_insights, 1):
+                    print(f"  {i}. {insight}")
 
 
 if __name__ == "__main__":
