@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 logger = logging.getLogger(__name__)
 
 FILE_NUM_LIMIT = 20
-DEFAULT_MODEL = 'gpt-4o-mini'
+DEFAULT_MODEL = 'gpt-4o'
 
 class ExtractionResponse(BaseModel):
     """Pydantic model for structured extraction response"""
@@ -213,7 +213,7 @@ def create_chat_completion(prompt, api_key, file_ids=None, model=None):
             limited_file_ids = file_ids[:FILE_NUM_LIMIT]
             
             if len(file_ids) > FILE_NUM_LIMIT:
-                logger.warning(f"⚠️  Limiting to first {FILE_NUM_LIMIT} files (you have: {len(file_ids)} files)")
+                logger.warning(f"Limiting to first {FILE_NUM_LIMIT} files (you have: {len(file_ids)} files)")
 
             # Add each file as input_file
             for file_id in limited_file_ids:
@@ -242,13 +242,13 @@ def main():
     """Example usage with the provided file information"""
     
     # Example file info from the user's request
-    example_file_info =  {
-      "id": "file-JqesWZfBFrw5RHVFyL1NbL",
-      "filename": "008_ResidentialLoan-S212619187201-26Jan2023.pdf",
-      "original_path": "output/user_upload/008_ResidentialLoan-S212619187201-26Jan2023.pdf",
+    example_file_info =        {
+      "id": "file-C5vHCLWLE1fZmdSpBJBf1F",
+      "filename": "sample.png",
+      "original_path": "/Users/liquan/code/haimoney-ai/output/user_upload/sample.png",
       "purpose": "assistants",
-      "uploaded_at": "2025-09-02T20:38:20.588754",
-      "size": 181418,
+      "uploaded_at": "2025-09-03T22:02:19.105966",
+      "size": 302546,
       "status": "processed"
     }
     try:

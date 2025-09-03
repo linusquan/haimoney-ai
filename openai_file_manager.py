@@ -23,20 +23,23 @@ class FileAnalysis(BaseModel):
         extra = "forbid"
 
 class OpenAIFileManager:
-    def __init__(self, api_key):
+    def __init__(self, api_key, output_dir="./output"):
         self.client = OpenAI(api_key=api_key)
-        self.file_ids_file = "openai_uploaded_files.json"
+        self.output_dir = Path(output_dir)
+        self.file_ids_file = self.output_dir / "openai_uploaded_files.json"
         self.uploaded_files = self.load_file_ids()
     
     def load_file_ids(self):
         """Load previously uploaded file IDs from JSON file"""
-        if os.path.exists(self.file_ids_file):
+        if self.file_ids_file.exists():
             with open(self.file_ids_file, 'r') as f:
                 return json.load(f)
         return {"files": [], "upload_sessions": []}
     
     def save_file_ids(self):
         """Save uploaded file IDs to JSON file"""
+        # Ensure output directory exists
+        self.output_dir.mkdir(parents=True, exist_ok=True)
         with open(self.file_ids_file, 'w') as f:
             json.dump(self.uploaded_files, f, indent=2)
     
@@ -169,41 +172,22 @@ def main():
     
     if existing_file_ids:
         print(f"📁 Found {len(existing_file_ids)} already uploaded files, skipping upload")
-        file_ids = existing_file_ids
         uploaded_files = True  # Set to True to continue with chat completion
     else:
-        # Upload files from the output directory
-        output_dir = "./output"
-        if os.path.exists(output_dir):
-            uploaded_files = manager.upload_directory(output_dir)
+        # Upload files from the user_upload directory only
+        user_upload_dir = "/Users/liquan/code/haimoney-ai/output/user_upload"
+        if os.path.exists(user_upload_dir):
+            uploaded_files = manager.upload_directory(user_upload_dir)
             
-            if uploaded_files:
-                # Get all uploaded file IDs
-                file_ids = [f.id for f in uploaded_files]
-            else:
+            if not uploaded_files:
                 uploaded_files = None
-                file_ids = []
         else:
-            print(f"❌ Output directory not found: {output_dir}")
-            print("Please run the file extraction script first or specify a different directory")
+            print(f"❌ User upload directory not found: {user_upload_dir}")
+            print("Please ensure files are placed in the user_upload directory")
             return
         print(f"\n💾 File IDs saved to: {manager.file_ids_file}")
         print("Use cleanup_openai_files.py to delete these files after testing")
         
-        # Demonstrate structured analysis
-        if uploaded_files or existing_file_ids:
-            print("\n🔍 Running structured analysis...")
-            analysis = manager.analyze_files_structured(
-                "Provide a comprehensive analysis of these files including summary, key insights, and file count."
-            )
-            
-            if analysis:
-                print("\n📊 Analysis Results:")
-                print(f"Summary: {analysis.summary}")
-                print(f"File Count: {analysis.file_count}")
-                print("Key Insights:")
-                for i, insight in enumerate(analysis.key_insights, 1):
-                    print(f"  {i}. {insight}")
 
 
 if __name__ == "__main__":
