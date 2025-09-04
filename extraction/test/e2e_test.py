@@ -176,27 +176,6 @@ def main():
     results.append("")
     results.append("End of Test Report")
     results.append("="*80)
-    
-    # Write results to file
-    try:
-        with open(output_file, 'w', encoding='utf-8') as f:
-            f.write('\n'.join(results))
-        
-        print(f"✅ Test results saved to: {output_file}")
-        print(f"📊 Summary: {success_count} passed, {fail_count} failed")
-        
-        # Also print summary to console
-        print("\n" + "="*50)
-        print("QUICK SUMMARY")
-        print("="*50)
-        for line in results[-10:]:
-            if line.strip():
-                print(line)
-        
-    except Exception as e:
-        print(f"❌ Failed to write results to file: {str(e)}")
-        # Print to console as fallback
-        print("\n".join(results))
 
 if __name__ == "__main__":
     main()
