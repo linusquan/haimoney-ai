@@ -1,0 +1,72 @@
+{
+  "firstName": {
+    "value": "Li",
+    "source": [
+      "011_189.md",
+      "014_liwang.md",
+      "021_Print _ Australian Taxation Office.md",
+      "broker_notation.md"
+    ],
+    "blank": false
+  },
+  "lastName": {
+    "value": "Wang",
+    "source": [
+      "011_189.md",
+      "014_liwang.md",
+      "021_Print _ Australian Taxation Office.md",
+      "broker_notation.md"
+    ],
+    "blank": false
+  },
+  "dateOfBirth": {
+    "value": "02 July 1992",
+    "source": [
+      "011_189.md",
+      "014_liwang.md"
+    ],
+    "blank": false
+  },
+  "phoneNumber": {
+    "value": "",
+    "source": [],
+    "blank": true
+  },
+  "email": {
+    "value": "",
+    "source": [],
+    "blank": true
+  },
+  "currentAddress": {
+    "value": "1 Lase Road, Camden NSW 2173, Australia",
+    "source": [
+      "021_Print _ Australian Taxation Office.md",
+      "broker_notation.md"
+    ],
+    "blank": false
+  },
+  "employmentStatus": {
+    "value": "employed",
+    "source": [
+      "020_PaySlip.md",
+      "015_13011409_20221215_QM_1.md"
+    ],
+    "blank": false
+  },
+  "annualIncome": {
+    "value": 75000,
+    "source": [
+      "020_PaySlip.md"
+    ],
+    "blank": false
+  },
+  "maritalStatus": {
+    "value": "married",
+    "source": [
+      "021_Print _ Australian Taxation Office.md",
+      "022_Print _ Australian Taxation Office2.md",
+      "broker_notation.md"
+    ],
+    "blank": false
+  }
+}
