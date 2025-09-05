@@ -154,8 +154,6 @@ end of {md_file.name}
         
         # Process each .md file
         for i, md_file in enumerate(md_files, 1):
-            logger.info(f"📄 [{i}/{len(md_files)}] Processing: {md_file.name}")
-            
             try:
                 # Get metadata path and load metadata
                 metadata_path = self.get_metadata_path(md_file)
@@ -173,8 +171,6 @@ end of {md_file.name}
                     logger.warning(f"⚠️  [{i}/{len(md_files)}] {md_file.name} - {metadata.get('errorReason', 'Unknown error')}")
                 else:
                     success_count += 1
-                    logger.info(f"✅ [{i}/{len(md_files)}] Successfully processed: {md_file.name}")
-                
             except Exception as e:
                 error_count += 1
                 logger.error(f"❌ [{i}/{len(md_files)}] Error processing {md_file.name}: {e}")
@@ -192,7 +188,7 @@ end of {md_file.name}
         # Join all outputs
         final_output = "\n\n".join(combined_output)
         
-        logger.info(f"🏁 Fact finding complete: {success_count} successful, {error_count} errors")
+        logger.info(f"Loaded all info from folder complete: {success_count} successful, {error_count} errors")
         return final_output
     
     def save_combined_output(self, output: str, output_file: str = "factfind_combined.txt") -> bool:
@@ -211,11 +207,11 @@ end of {md_file.name}
             with open(output_path, 'w', encoding='utf-8') as f:
                 f.write(output)
             
-            logger.info(f"💾 Combined output saved to: {output_path}")
+            logger.info(f"Combined output saved to: {output_path}")
             return True
             
         except Exception as e:
-            logger.error(f"❌ Error saving output to {output_file}: {e}")
+            logger.error(f"Error saving output to {output_file}: {e}")
             return False
 
 def main():

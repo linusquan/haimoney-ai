@@ -1,0 +1,35 @@
+{
+  "assets": [
+    {
+      "category": "Deposit Account",
+      "description": "Commonwealth Bank Smart Access (Acc 062018 10557862)",
+      "ownership": "SS 100.0%",
+      "value": 2573.45,
+      "valuationBasis": "Certified Valuation",
+      "source": [
+        "002_TransactionSummary 2.pdf"
+      ]
+    },
+    {
+      "category": "Deposit Account",
+      "description": "Macquarie Platinum Transaction Account (Acc 00726330)",
+      "ownership": "LW 100.0%",
+      "value": 270.03,
+      "valuationBasis": "Certified Valuation",
+      "source": [
+        "003_Transaction_report.pdf"
+      ]
+    },
+    {
+      "category": "Deposit Account",
+      "description": "St.George Complete Freedom Offset (BSB 112-879 Acc 497 468 415)",
+      "ownership": "LW 50.0% - SS 50.0%",
+      "value": 248175.07,
+      "valuationBasis": "Certified Valuation",
+      "source": [
+        "004_accountDetails.pdf",
+        "008_ResidentialLoan-S212619187201-26Jan2023.pdf"
+      ]
+    }
+  ]
+}
