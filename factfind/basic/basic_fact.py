@@ -10,8 +10,9 @@ from typing import List, Union, Type
 from enum import Enum
 from pydantic import BaseModel
 
-# Import base_extractor using absolute import
+# Import base_extractor and shared models using absolute import
 from factfind.base_extractor import BaseExtractor
+from factfind.shared_models import DetailedSource
 
 # Enums for controlled vocabulary
 class MaritalStatus(str, Enum):
@@ -27,13 +28,13 @@ class MaritalStatus(str, Enum):
 class SimpleField(BaseModel):
     """Standard field structure for simple information extraction"""
     value: Union[str, bool, int, float]
-    source: List[str]
+    source: List[DetailedSource]
     blank: bool
 
 class MaritalStatusField(BaseModel):
     """Field structure for marital status with enum validation"""
     value: Union[MaritalStatus, bool]
-    source: List[str]
+    source: List[DetailedSource]
     blank: bool
 
 class BasicFactExtraction(BaseModel):
@@ -56,7 +57,7 @@ class BasicFactExtractor(BaseExtractor[MultipleApplicantsExtraction]):
     """Basic fact extractor using BaseExtractor"""
     
     def __init__(self, api_key: str = None):
-        super().__init__(api_key=api_key, model='gpt-5-nano')
+        super().__init__(api_key=api_key, model='o4-mini')
     
     def get_model_class(self) -> Type[MultipleApplicantsExtraction]:
         """Return the Pydantic model class for basic fact extraction"""

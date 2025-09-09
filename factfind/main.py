@@ -6,14 +6,12 @@ Runs basic fact extraction and asset extraction sequentially and displays result
 
 import json
 import logging
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # No longer need to manipulate sys.path with absolute imports
 
 from factfind.basic.basic_fact import BasicFactExtractor
 from factfind.asset.asset_extraction import AssetExtractor
-from factfind.liability.liability_extraction import LiabilityExtractor
-from factfind.income.income_extraction import IncomeExtractor
-from factfind.expense.expense_extraction import ExpenseExtractor
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -31,29 +29,53 @@ def print_json_results(title: str, results):
     results_json = json.dumps(results.model_dump(), indent=2, ensure_ascii=False)
     print(results_json)
 
+def run_extraction_parallel(extractors_config):
+    """Run multiple extractors in parallel using ThreadPoolExecutor"""
+    results = {}
+    
+    with ThreadPoolExecutor(max_workers=len(extractors_config)) as executor:
+        # Submit all extraction tasks
+        future_to_name = {
+            executor.submit(extractor.run_extraction): name 
+            for name, extractor in extractors_config.items()
+        }
+        
+        # Collect results as they complete
+        for future in as_completed(future_to_name):
+            extractor_name = future_to_name[future]
+            try:
+                result = future.result()
+                results[extractor_name] = result
+                logger.info(f"Completed {extractor_name} extraction")
+            except Exception as exc:
+                logger.error(f"{extractor_name} extraction failed: {exc}")
+                results[extractor_name] = None
+    
+    return results
+
 def main():
     """Main test function that runs both extractors"""
     try:
         print_separator("DOCUMENT EXTRACTION TEST SUITE")
-        print("Running basic fact extraction, asset extraction, liability extraction, income extraction, and expense extraction sequentially...")
+        print("Running basic fact extraction and asset extraction in parallel...")
         
-        # Initialize extractors
-        # logger.info("Initializing extractors...")
-        basic_fact_extractor = BasicFactExtractor()
-        asset_extractor = AssetExtractor()
-        liability_extractor = LiabilityExtractor()
-        income_extractor = IncomeExtractor()
-        expense_extractor = ExpenseExtractor()
+        # Initialize extractors for parallel execution
+        logger.info("Initializing extractors...")
+        extractors_config = {
+            "basic_fact": BasicFactExtractor(),
+            "asset": AssetExtractor()
+        }
         
-        # Run basic fact extraction
-        # logger.info("Starting basic fact extraction...")
-        # basic_fact_results = basic_fact_extractor.run_extraction()
-        # print_json_results("BASIC FACT EXTRACTION RESULTS", basic_fact_results)
+        # Run extractions in parallel
+        logger.info("Starting parallel extraction...")
+        results = run_extraction_parallel(extractors_config)
         
-        # # Run asset extraction
-        # logger.info("Starting asset extraction...")
-        # asset_results = asset_extractor.run_extraction()
-        # print_json_results("ASSET EXTRACTION RESULTS", asset_results)
+        # Display results
+        if results.get("basic_fact"):
+            print_json_results("BASIC FACT EXTRACTION RESULTS", results["basic_fact"])
+        
+        if results.get("asset"):
+            print_json_results("ASSET EXTRACTION RESULTS", results["asset"])
         
         # # Run liability extraction
         # logger.info("Starting liability extraction...")
@@ -66,9 +88,9 @@ def main():
         # print_json_results("INCOME EXTRACTION RESULTS", income_results)
         
         # Run expense extraction
-        logger.info("Starting expense extraction...")
-        expense_results = expense_extractor.run_extraction()
-        print_json_results("EXPENSE EXTRACTION RESULTS", expense_results)
+        # logger.info("Starting expense extraction...")
+        # expense_results = expense_extractor.run_extraction()
+        # print_json_results("EXPENSE EXTRACTION RESULTS", expense_results)
         
         print_separator("TEST COMPLETE")
         logger.info("All extractions completed successfully")

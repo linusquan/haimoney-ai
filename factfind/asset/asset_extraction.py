@@ -10,8 +10,9 @@ from typing import List, Type
 from enum import Enum
 from pydantic import BaseModel, Field
 
-# Import base_extractor using absolute import
+# Import base_extractor and shared models using absolute import
 from factfind.base_extractor import BaseExtractor
+from factfind.shared_models import DetailedSource
 
 # Enums for controlled vocabulary
 class AssetCategory(str, Enum):
@@ -49,7 +50,7 @@ class Asset(BaseModel):
     ownership: str = Field(description="Ownership details (e.g., 'YZ 100.0%', 'YZ 50.0% - YO 50.0%')")
     value: float = Field(ge=0, description="Asset value as number (e.g., 992000, 300000)")
     valuationBasis: str = Field(description="basis of valuation (e.g., 'Applicant Estimate', 'Certified Valuation')")
-    source: List[str] = Field(default=[], description="Source documents where this asset was found")
+    source: List[DetailedSource] = Field(default=[], description="Source documents where this asset was found")
 
 class AssetsExtraction(BaseModel):
     """Schema for extracting asset information from multiple applicants"""

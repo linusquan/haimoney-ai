@@ -335,18 +335,7 @@ class FileProcessor:
 def main():
     """Main function to run the file processor"""
     try:
-        # Example configurations:
-        # Default: saves to same directory as input files
-        # processor = FileProcessor()
-        
-        # Custom output directory
-        # processor = FileProcessor(output_dir="extracted_content")
-        
-        # Custom input and output directories
-        # processor = FileProcessor(input_dir="my_files", output_dir="my_results")
-        
-        # Configure pipeline processing (M concurrent extractions maintained continuously)
-        max_concurrent = 5  # Change this to set number of concurrent extractions
+        max_concurrent = 10  # Change this to set number of concurrent extractions
         processor = FileProcessor(output_dir='./output/extraction', batch_size=max_concurrent)
         results = processor.run()
         
