@@ -95,3 +95,13 @@ the the extracted data would contain:
 | Asset Category   | Description                          | Ownership                | Value       | Valuation Method   |
 |------------------|--------------------------------------|--------------------------|-------------|--------------------|
 | Superannuation      | uni super   | JC100%      | 176,911.20    | Certified Valuation|
+
+IMPORTANT - Source Field Requirements
+
+When filling in the source field, you must provide complete and precise details, including:
+file_path: The exact filename where the information was found.
+page_number: The page number within that file (starting from 1, not 0).
+For multi-page documents, always indicate the correct page number where the information appears.
+If the same information is found on multiple pages or in multiple documents, list the sources in order of relevance.
+Relevance rules example:
+- A driver's licence is considered more relevant for confirming a person's name than a tax return document, even though both contain the same name. Therefore, the driver's licence should be listed first.

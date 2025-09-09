@@ -6,12 +6,12 @@ using OpenAI's structured output capabilities.
 """
 
 # Import modules
-from factfind.asset import AssetExtractor, Asset, AssetsExtraction, AssetCategory
-from factfind.income import IncomeExtractor, Income, IncomeExtraction, IncomeType, IncomeFrequency
-from factfind.basic import BasicFactExtractor, BasicFactExtraction, MultipleApplicantsExtraction, MaritalStatus
+from factfind.asset import AssetAnalyser, Asset, AssetsExtraction, AssetCategory
+from factfind.income import IncomeAnalyser, Income, IncomeExtraction, IncomeType, IncomeFrequency
+from factfind.basic import BasicFactAnalyser, BasicFactExtraction, MultipleApplicantsExtraction, MaritalStatus
 
 __all__ = [
-    'AssetExtractor', 'Asset', 'AssetsExtraction', 'AssetCategory',
-    'IncomeExtractor', 'Income', 'IncomeExtraction', 'IncomeType', 'IncomeFrequency',
-    'BasicFactExtractor', 'BasicFactExtraction', 'MultipleApplicantsExtraction', 'MaritalStatus'
+    'AssetAnalyser', 'Asset', 'AssetsExtraction', 'AssetCategory',
+    'IncomeAnalyser', 'Income', 'IncomeExtraction', 'IncomeType', 'IncomeFrequency',
+    'BasicFactAnalyser', 'BasicFactExtraction', 'MultipleApplicantsExtraction', 'MaritalStatus'
 ]

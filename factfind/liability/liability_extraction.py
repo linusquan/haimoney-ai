@@ -10,15 +10,30 @@ from typing import List, Type
 from enum import Enum
 from pydantic import BaseModel, Field
 
-# Import base_extractor using absolute import
-from factfind.base_extractor import BaseExtractor
+# Import base_extractor and shared models using absolute import
+from factfind.base_extractor import BaseAnalyser
+from factfind.shared_models import DetailedSource
 
 # Enums for controlled vocabulary
 class LiabilityType(str, Enum):
     """Enumeration for liability type values"""
-    MORTGAGE_LOAN = "Mortgage Loan"
+    CHATTEL_MORTGAGE = "Chattel Mortgage"
+    COMMERCIAL_BILL = "Commercial Bill"
+    CONTINGENT_LIABILITY = "Contingent Liability"
     CREDIT_CARD = "Credit Card"
+    HECS = "HECS"
+    HIRE_PURCHASE = "Hire Purchase"
+    LEASE = "Lease"
+    LINE_OF_CREDIT = "Line Of Credit"
+    LOAN_AS_GUARANTOR = "Loan As Guarantor"
+    MORTGAGE_LOAN = "Mortgage Loan"
+    OTHER_LOAN = "Other Loan"
+    OUTSTANDING_TAXATION = "Outstanding Taxation"
+    OVERDRAFT = "Overdraft"
     PERSONAL_LOAN = "Personal Loan"
+    STORE_CARD = "Store Card"
+    TERM_LOAN = "Term Loan"
+    OTHER = "Other"
 
 # Pydantic models following the exact structure from liability_info_extract_system_prompt.mst
 class Liability(BaseModel):
@@ -30,13 +45,13 @@ class Liability(BaseModel):
     lender: str = Field(description="Lender's name (e.g., 'CBA', 'Bankwest')")
     amount_owing: float = Field(ge=0, description="Amount owing as number (e.g., 639392, 40000)")
     limit: float = Field(ge=0, description="Limit of liability, for credit cards this is the limit, for others equal to amount owing")
-    source: List[str] = Field(default=[], description="Source documents where this liability was found")
+    source: List[DetailedSource] = Field(default=[], description="Source documents where this liability was found")
 
 class MultipleApplicantsLiabilities(BaseModel):
     """Schema for extracting liability information from multiple applicants"""
     liabilities: List[Liability] = Field(description="List of all liabilities found in the documents")
 
-class LiabilityExtractor(BaseExtractor[MultipleApplicantsLiabilities]):
+class LiabilityAnalyser(BaseAnalyser[MultipleApplicantsLiabilities]):
     """Liability extractor using BaseExtractor"""
     
     def __init__(self, api_key: str = None):

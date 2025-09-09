@@ -30,7 +30,7 @@ You are a helpful assistant for extracting expense information for property loan
         Vehicle Maintenance & Transport
         Water
     2. ownership: the expense ownership allocation. who spent the money
-      Ownership is using the client initial with percentage and dash to split. e.g. name Mark Zhou & Olivia Ou has 50% ownership split then it will be marked as: MZ 50.0% - OO 50.0%. For couples unless specifically mentioned usually it is 50-50.
+      Ownership is using the client initial with percentage and dash to split. e.g. name Mark Zhou & Olivia Ou has 50% ownership split then it will be marked as: MZ 50.0% - OO 50.0%. For couples unless specifically mentioned usually it is 50-50. if it is the single person use the name in full e.g Mark Zhou - 100%.
     5. frequency: 
           Annually
           Monthly

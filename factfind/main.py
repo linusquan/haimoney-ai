@@ -10,8 +10,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # No longer need to manipulate sys.path with absolute imports
 
-from factfind.basic.basic_fact import BasicFactExtractor
-from factfind.asset.asset_extraction import AssetExtractor
+from factfind.basic.basic_fact import BasicFactAnalyser
+from factfind.asset.asset_extraction import AssetAnalyser
+from factfind.liability.liability_extraction import LiabilityAnalyser
+from factfind.income.income_extraction import IncomeAnalyser
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(funcName)s() - %(message)s')
@@ -61,31 +63,31 @@ def main():
         
         # Initialize extractors for parallel execution
         logger.info("Initializing extractors...")
-        extractors_config = {
-            "basic_fact": BasicFactExtractor(),
-            "asset": AssetExtractor()
-        }
+        # extractors_config = {
+        #     "basic_fact": BasicFactAnalyser(),
+        #     "asset": AssetAnalyser(),
+        #     "liability": LiabilityExtractor()
+        # }
         
-        # Run extractions in parallel
-        logger.info("Starting parallel extraction...")
-        results = run_extraction_parallel(extractors_config)
+        # # Run extractions in parallel
+        # logger.info("Starting parallel extraction...")
+        # results = run_extraction_parallel(extractors_config)
         
-        # Display results
-        if results.get("basic_fact"):
-            print_json_results("BASIC FACT EXTRACTION RESULTS", results["basic_fact"])
+        # # Display results
+        # if results.get("basic_fact"):
+        #     print_json_results("BASIC FACT EXTRACTION RESULTS", results["basic_fact"])
         
-        if results.get("asset"):
-            print_json_results("ASSET EXTRACTION RESULTS", results["asset"])
+        # if results.get("asset"):
+        #     print_json_results("ASSET EXTRACTION RESULTS", results["asset"])
         
-        # # Run liability extraction
-        # logger.info("Starting liability extraction...")
-        # liability_results = liability_extractor.run_extraction()
-        # print_json_results("LIABILITY EXTRACTION RESULTS", liability_results)
+        # if results.get("liability"):
+        #     print_json_results("Liability EXTRACTION RESULTS", results["liability"])
         
         # # Run income extraction
-        # logger.info("Starting income extraction...")
-        # income_results = income_extractor.run_extraction()
-        # print_json_results("INCOME EXTRACTION RESULTS", income_results)
+        logger.info("Starting income extraction...")
+        income_extractor = IncomeAnalyser()
+        income_results = income_extractor.run_extraction()
+        print_json_results("INCOME EXTRACTION RESULTS", income_results)
         
         # Run expense extraction
         # logger.info("Starting expense extraction...")

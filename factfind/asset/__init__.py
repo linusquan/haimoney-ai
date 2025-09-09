@@ -5,6 +5,6 @@ This module provides functionality for extracting asset information from documen
 using OpenAI's structured output capabilities.
 """
 
-from factfind.asset.asset_extraction import AssetExtractor, Asset, AssetsExtraction, AssetCategory
+from factfind.asset.asset_extraction import AssetAnalyser, Asset, AssetsExtraction, AssetCategory
 
-__all__ = ['AssetExtractor', 'Asset', 'AssetsExtraction', 'AssetCategory']
+__all__ = ['AssetAnalyser', 'Asset', 'AssetsExtraction', 'AssetCategory']

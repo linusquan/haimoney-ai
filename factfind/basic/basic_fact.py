@@ -11,7 +11,7 @@ from enum import Enum
 from pydantic import BaseModel
 
 # Import base_extractor and shared models using absolute import
-from factfind.base_extractor import BaseExtractor
+from factfind.base_extractor import BaseAnalyser
 from factfind.shared_models import DetailedSource
 
 # Enums for controlled vocabulary
@@ -53,7 +53,7 @@ class MultipleApplicantsExtraction(BaseModel):
     """Schema for extracting information from multiple applicants"""
     applicants: List[BasicFactExtraction]
 
-class BasicFactExtractor(BaseExtractor[MultipleApplicantsExtraction]):
+class BasicFactAnalyser(BaseAnalyser[MultipleApplicantsExtraction]):
     """Basic fact extractor using BaseExtractor"""
     
     def __init__(self, api_key: str = None):

@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 # Generic type for Pydantic models
 T = TypeVar('T', bound=BaseModel)
 
-class BaseExtractor(ABC, Generic[T]):
+class BaseAnalyser(ABC, Generic[T]):
     """
     Abstract base class for document extraction using OpenAI Responses API
     

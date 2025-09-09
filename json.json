@@ -1,0 +1,28 @@
+{
+  "packages": [
+    {
+      "type": "AEF2",
+      "token": "90hIQ",
+      "purchased": 1670144759619,
+      "dateTaken": 1670630400000,
+      "gfaMemberNo": ""
+    },
+    { "type": "5FP", "token": "qabOg", "purchased": 1672116759847 }
+  ],
+  "passwordHash": "30452e6f126f19a490e8fdac015af6195001ab91",
+  "membership": {
+    "associate": "",
+    "membership_exp": "2026-04-30T00:00:00.000Z",
+    "bulk2_cnt": 0,
+    "GFA_number": "M-24042",
+    "GFA_exp": "2026-05-31T00:00:00.000Z",
+    "balance": -70.6,
+    "status": "Full",
+    "people_id": 1563,
+    "id": 1563,
+    "bulk1": "2025-07-11T00:00:00.000Z"
+  },
+  "customerToken": "cus_w_PguHv0UloYpuonPchclQ",
+  "cardDisplay": "visa,XXXX-XXXX-XXXX-1290",
+  "committeSeats": []
+}

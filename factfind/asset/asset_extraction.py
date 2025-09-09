@@ -11,7 +11,7 @@ from enum import Enum
 from pydantic import BaseModel, Field
 
 # Import base_extractor and shared models using absolute import
-from factfind.base_extractor import BaseExtractor
+from factfind.base_extractor import BaseAnalyser
 from factfind.shared_models import DetailedSource
 
 # Enums for controlled vocabulary
@@ -56,7 +56,7 @@ class AssetsExtraction(BaseModel):
     """Schema for extracting asset information from multiple applicants"""
     assets: List[Asset] = Field(description="List of all assets found in the documents")
 
-class AssetExtractor(BaseExtractor[AssetsExtraction]):
+class AssetAnalyser(BaseAnalyser[AssetsExtraction]):
     """Asset extractor using BaseExtractor"""
     
     def __init__(self, api_key: str = None):

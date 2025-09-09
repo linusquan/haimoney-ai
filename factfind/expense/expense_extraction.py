@@ -11,7 +11,7 @@ from enum import Enum
 from pydantic import BaseModel, Field
 
 # Import base_extractor using absolute import
-from factfind.base_extractor import BaseExtractor
+from factfind.base_extractor import BaseAnalyser
 
 # Enums for controlled vocabulary
 class ExpenseType(str, Enum):
@@ -65,7 +65,7 @@ class ExpenseExtraction(BaseModel):
     """Schema for extracting expense information from multiple applicants"""
     expenses: List[Expense] = Field(description="List of all expenses found in the documents")
 
-class ExpenseExtractor(BaseExtractor[ExpenseExtraction]):
+class ExpenseExtractor(BaseAnalyser[ExpenseExtraction]):
     """Expense extractor using BaseExtractor"""
     
     def __init__(self, api_key: str = None):

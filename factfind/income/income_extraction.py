@@ -10,18 +10,29 @@ from typing import List, Type, Optional
 from enum import Enum
 from pydantic import BaseModel, Field
 
-# Import base_extractor using absolute import
-from factfind.base_extractor import BaseExtractor
+# Import base_extractor and shared models using absolute import
+from factfind.base_extractor import BaseAnalyser
+from factfind.shared_models import DetailedSource
 
 # Enums for controlled vocabulary
 class IncomeType(str, Enum):
     """Enumeration for income type values"""
     BASE_SALARY = "Base Salary"
+    REGULAR_OVERTIME = "Regular Overtime"
     BONUS = "Bonus"
-    DIVIDENDS = "Dividends"
+    COMMISSION = "Commission"
+    WORK_ALLOWANCE = "Work Allowance"
+    WORKERS_COMPENSATION = "Workers Compensation"
+    GOVERNMENT_BENEFITS = "Government Benefits"
+    PRIVATE_PENSION = "Private Pension"
+    ADDBACK = "Addback"
+    ANNUITIES = "Annuities"
     COMPANY_PROFIT_BEFORE_TAX = "Company Profit Before Tax"
+    DIVIDENDS = "Dividends"
+    FOREIGN_SOURCED = "Foreign Sourced"
+    INTEREST_INCOME = "Interest Income"
     RENTAL_INCOME = "Rental Income"
-    PERSONAL_LOAN = "Personal Loan"
+    OTHER_INCOME = "Other Income"
 
 class IncomeFrequency(str, Enum):
     """Enumeration for income frequency values"""
@@ -38,13 +49,13 @@ class Income(BaseModel):
     ownership: str = Field(description="Ownership details (e.g., 'Yong Hong Zhou', 'YZ 50.0% - YO 50.0%')")
     frequency: IncomeFrequency = Field(description="Income frequency (e.g., 'Annually', 'Monthly', 'Fortnightly', 'Weekly')")
     amount: float = Field(ge=0, description="Income amount as number (e.g., 1465535, 20160, 2400)")
-    source: List[str] = Field(default=[], description="Source documents where this income was found")
+    source: List[DetailedSource] = Field(default=[], description="Source documents where this income was found")
 
 class IncomeExtraction(BaseModel):
     """Schema for extracting income information from multiple applicants"""
     incomes: List[Income] = Field(description="List of all incomes found in the documents")
 
-class IncomeExtractor(BaseExtractor[IncomeExtraction]):
+class IncomeAnalyser(BaseAnalyser[IncomeExtraction]):
     """Income extractor using BaseExtractor"""
     
     def __init__(self, api_key: str = None):
