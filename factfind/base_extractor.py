@@ -15,9 +15,8 @@ from pydantic import BaseModel
 from openai import OpenAI
 from dotenv import load_dotenv
 
-# Add parent directory to path to import factfind
-sys.path.append(str(Path(__file__).parent))
-from factfind import FactFinder
+# Import FactFinder using absolute import
+from factfind.fact_aggregator import FactAggregator
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -117,9 +116,9 @@ class BaseExtractor(ABC, Generic[T]):
             logger.info(f"Generating factfind content from: {extraction_dir}")
             
             # Initialize and run fact finder
-            fact_finder = FactFinder(str(extraction_dir))
+            fact_finder = FactAggregator(str(extraction_dir))
             combined_content = fact_finder.combine_files()
-            
+            print('content', combined_content)
             logger.info(f"Generated factfind content: {len(combined_content)} characters")
             return combined_content
             
@@ -184,6 +183,7 @@ class BaseExtractor(ABC, Generic[T]):
             
             # Generate factfind content
             content = self.generate_factfind_content(extraction_dir)
+            
             
             # Extract data
             extraction = self.extract_data(content, system_prompt)

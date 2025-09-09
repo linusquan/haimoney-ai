@@ -5,15 +5,13 @@ Uses OpenAI Responses API to extract structured asset information from combined 
 following the financial_detail_extraction.mst schema for home loan applications.
 """
 
-import sys
 from pathlib import Path
 from typing import List, Type
 from enum import Enum
 from pydantic import BaseModel, Field
 
-# Add parent directory to path to import base_extractor
-sys.path.append(str(Path(__file__).parent))
-from base_extractor import BaseExtractor
+# Import base_extractor using absolute import
+from factfind.base_extractor import BaseExtractor
 
 # Enums for controlled vocabulary
 class AssetCategory(str, Enum):
@@ -53,21 +51,21 @@ class Asset(BaseModel):
     valuationBasis: str = Field(description="basis of valuation (e.g., 'Applicant Estimate', 'Certified Valuation')")
     source: List[str] = Field(default=[], description="Source documents where this asset was found")
 
-class MultipleApplicantsAssets(BaseModel):
+class AssetsExtraction(BaseModel):
     """Schema for extracting asset information from multiple applicants"""
     assets: List[Asset] = Field(description="List of all assets found in the documents")
 
-class AssetExtractor(BaseExtractor[MultipleApplicantsAssets]):
+class AssetExtractor(BaseExtractor[AssetsExtraction]):
     """Asset extractor using BaseExtractor"""
     
     def __init__(self, api_key: str = None):
         super().__init__(api_key=api_key, model='gpt-5-mini')
     
-    def get_model_class(self) -> Type[MultipleApplicantsAssets]:
+    def get_model_class(self) -> Type[AssetsExtraction]:
         """Return the Pydantic model class for asset extraction"""
-        return MultipleApplicantsAssets
+        return AssetsExtraction
     
     def get_default_template_path(self) -> str:
         """Return the default template file path"""
-        return "financial_detail_extraction.mst"
+        return str(Path(__file__).parent / "asset_detail_extraction.mst")
     

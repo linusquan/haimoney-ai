@@ -14,7 +14,7 @@ from typing import List, Dict
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-class FactFinder:
+class FactAggregator:
     def __init__(self, extraction_dir: str = "output/extraction"):
         """
         Initialize the FactFinder
@@ -218,7 +218,7 @@ def main():
     """Main function to run the fact finder"""
     try:
         # Initialize fact finder
-        fact_finder = FactFinder()
+        fact_finder = FactAggregator()
         
         # Combine all files
         combined_output = fact_finder.combine_files()

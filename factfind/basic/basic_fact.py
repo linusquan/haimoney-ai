@@ -5,15 +5,13 @@ Uses OpenAI Responses API to extract structured personal information from combin
 following the basic_fact.json schema with source tracking.
 """
 
-import sys
 from pathlib import Path
 from typing import List, Union, Type
 from enum import Enum
 from pydantic import BaseModel
 
-# Add parent directory to path to import base_extractor
-sys.path.append(str(Path(__file__).parent))
-from base_extractor import BaseExtractor
+# Import base_extractor using absolute import
+from factfind.base_extractor import BaseExtractor
 
 # Enums for controlled vocabulary
 class MaritalStatus(str, Enum):
@@ -66,5 +64,4 @@ class BasicFactExtractor(BaseExtractor[MultipleApplicantsExtraction]):
     
     def get_default_template_path(self) -> str:
         """Return the default template file path"""
-        return "basic_info_extract_system_prompt.mst"
-    
+        return str(Path(__file__).parent / "basic_info_extract_system_prompt.mst")
