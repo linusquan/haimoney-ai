@@ -118,7 +118,7 @@ class BaseExtractor(ABC, Generic[T]):
             # Initialize and run fact finder
             fact_finder = FactAggregator(str(extraction_dir))
             combined_content = fact_finder.combine_files()
-            print('content', combined_content)
+            # print('content', combined_content)
             logger.info(f"Generated factfind content: {len(combined_content)} characters")
             return combined_content
             
@@ -149,7 +149,7 @@ class BaseExtractor(ABC, Generic[T]):
                 model=self.model,
                 input=[
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": content}
+                    {"role": "user", "content": "This is the content I would like to be analysed: " + content + "completed analysis content"}
                 ],
                 text_format=model_class
             )

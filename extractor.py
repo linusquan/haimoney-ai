@@ -12,12 +12,12 @@ import logging
 import time
 from pathlib import Path
 from typing import List, Dict, Any
-from concurrent.futures import ThreadPoolExecutor, TimeoutError
+from concurrent.futures import ThreadPoolExecutor, TimeoutError, as_completed
 
 # Add the extraction directory to Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), 'extraction'))
 
-from gemini_file_extract import GeminiFileExtractor, ExtractionResult
+from extraction.gemini_file_extract import GeminiFileExtractor, ExtractionResult
 
 # Configure logging
 logging.basicConfig(
@@ -31,7 +31,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 class FileProcessor:
-    def __init__(self, input_dir: str = "output/user_upload", output_dir: str = None, timeout_seconds: int = 120):
+    def __init__(self, input_dir: str = "output/user_upload", output_dir: str = None, timeout_seconds: int = 120, batch_size: int = 3):
         """
         Initialize the file processor
         
@@ -39,10 +39,12 @@ class FileProcessor:
             input_dir: Directory containing files to process
             output_dir: Directory to save extracted files (defaults to same as input_dir)
             timeout_seconds: Timeout for each file extraction (default: 2 minutes)
+            batch_size: Maximum number of concurrent extractions in pipeline (default: 3)
         """
         self.input_dir = Path(input_dir)
         self.output_dir = Path(output_dir) if output_dir else self.input_dir
         self.timeout_seconds = timeout_seconds
+        self.batch_size = batch_size
         self.extractor = None
         
         # Create output directory if it doesn't exist
@@ -76,6 +78,7 @@ class FileProcessor:
         
         logger.info(f"📁 Discovered {len(files)} files to process")
         return sorted(files)
+
 
     def get_output_paths(self, input_file: Path) -> tuple[Path, Path]:
         """
@@ -216,6 +219,82 @@ class FileProcessor:
         
         return summary
 
+    def process_with_pipeline(self, files: List[Path]) -> List[Dict[str, Any]]:
+        """
+        Process files using continuous pipeline approach - maintains max_concurrent active extractions
+        
+        Args:
+            files: List of file paths to process
+            
+        Returns:
+            List of processing results for all files
+        """
+        if not files:
+            return []
+            
+        max_concurrent = self.batch_size  # Reuse batch_size as max_concurrent
+        total_files = len(files)
+        results = []
+        
+        logger.info(f"🚀 Starting pipeline processing with max {max_concurrent} concurrent extractions")
+        
+        with ThreadPoolExecutor(max_workers=max_concurrent) as executor:
+            # Track active futures and remaining files
+            active_futures = {}
+            remaining_files = list(files)  # Copy the list
+            file_counter = 0
+            
+            # Start initial batch of concurrent extractions
+            while len(active_futures) < max_concurrent and remaining_files:
+                file_path = remaining_files.pop(0)
+                file_counter += 1
+                
+                logger.info(f"🔍 [{file_counter}/{total_files}] Starting: {file_path.name}")
+                future = executor.submit(self.process_file, file_path, file_counter, total_files)
+                active_futures[future] = (file_path, file_counter)
+            
+            # Process completions and start new extractions
+            while active_futures:
+                # Wait for any extraction to complete
+                for completed_future in as_completed(active_futures):
+                    file_path, file_index = active_futures[completed_future]
+                    
+                    try:
+                        # Get the result
+                        result = completed_future.result()
+                        results.append(result)
+                        
+                        if result["success"]:
+                            logger.info(f"✅ [{file_index}/{total_files}] Completed: {file_path.name}")
+                        else:
+                            logger.error(f"❌ [{file_index}/{total_files}] Failed: {file_path.name}")
+                            
+                    except Exception as e:
+                        logger.error(f"❌ Unexpected error processing {file_path.name}: {e}")
+                        results.append({
+                            "file": file_path.name,
+                            "success": False,
+                            "extraction_error": str(e),
+                            "save_success": False
+                        })
+                    
+                    # Remove completed future
+                    del active_futures[completed_future]
+                    
+                    # Start next file if available
+                    if remaining_files:
+                        next_file = remaining_files.pop(0)
+                        file_counter += 1
+                        
+                        logger.info(f"🔍 [{file_counter}/{total_files}] Starting: {next_file.name}")
+                        new_future = executor.submit(self.process_file, next_file, file_counter, total_files)
+                        active_futures[new_future] = (next_file, file_counter)
+                    
+                    break  # Process one completion at a time
+        
+        logger.info(f"🏁 Pipeline processing complete: {len(results)} files processed")
+        return results
+
     def run(self) -> Dict[str, Any]:
         """
         Run the complete file processing pipeline
@@ -233,30 +312,12 @@ class FileProcessor:
             logger.warning("⚠️  No files found to process")
             return {"total_files": 0, "processed": [], "summary": {"success": 0, "failed": 0}}
         
-        # Process each file
-        processed_files = []
-        success_count = 0
-        failed_count = 0
+        # Process files using continuous pipeline
+        processed_files = self.process_with_pipeline(files)
         
-        for i, file_path in enumerate(files, 1):
-            try:
-                result = self.process_file(file_path, i, len(files))
-                processed_files.append(result)
-                
-                if result["success"]:
-                    success_count += 1
-                else:
-                    failed_count += 1
-                    
-            except Exception as e:
-                logger.error(f"❌ Unexpected error processing {file_path.name}: {e}")
-                failed_count += 1
-                processed_files.append({
-                    "file": file_path.name,
-                    "success": False,
-                    "extraction_error": str(e),
-                    "save_success": False
-                })
+        # Count successes and failures
+        success_count = sum(1 for result in processed_files if result["success"])
+        failed_count = len(processed_files) - success_count
         
         # Generate summary
         summary = {
@@ -284,7 +345,9 @@ def main():
         # Custom input and output directories
         # processor = FileProcessor(input_dir="my_files", output_dir="my_results")
         
-        processor = FileProcessor()
+        # Configure pipeline processing (M concurrent extractions maintained continuously)
+        max_concurrent = 5  # Change this to set number of concurrent extractions
+        processor = FileProcessor(output_dir='./output/extraction', batch_size=max_concurrent)
         results = processor.run()
         
         # Print final summary

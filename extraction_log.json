@@ -1,0 +1,306 @@
+{
+  "total_files": 33,
+  "processed": [
+    {
+      "file": "592k.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 14.91,
+      "md_path": "output/extraction/592k.md",
+      "metadata_path": "output/extraction/592k-hmoney-metadata.json"
+    },
+    {
+      "file": "DL - Yang.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 18.09,
+      "md_path": "output/extraction/DL - Yang.md",
+      "metadata_path": "output/extraction/DL - Yang-hmoney-metadata.json"
+    },
+    {
+      "file": "DL-xin.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 26.51,
+      "md_path": "output/extraction/DL-xin.md",
+      "metadata_path": "output/extraction/DL-xin-hmoney-metadata.json"
+    },
+    {
+      "file": "Income Statement - Cindy Yang.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 13.1,
+      "md_path": "output/extraction/Income Statement - Cindy Yang.md",
+      "metadata_path": "output/extraction/Income Statement - Cindy Yang-hmoney-metadata.json"
+    },
+    {
+      "file": "588k.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 33.03,
+      "md_path": "output/extraction/588k.md",
+      "metadata_path": "output/extraction/588k-hmoney-metadata.json"
+    },
+    {
+      "file": "Income Statement - Xin Wang.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 14.24,
+      "md_path": "output/extraction/Income Statement - Xin Wang.md",
+      "metadata_path": "output/extraction/Income Statement - Xin Wang-hmoney-metadata.json"
+    },
+    {
+      "file": "PaySlip_08Mar24_Cindy(1).pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 11.28,
+      "md_path": "output/extraction/PaySlip_08Mar24_Cindy(1).md",
+      "metadata_path": "output/extraction/PaySlip_08Mar24_Cindy(1)-hmoney-metadata.json"
+    },
+    {
+      "file": "PaySlip_23Feb24_Cindy(1).pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 12.24,
+      "md_path": "output/extraction/PaySlip_23Feb24_Cindy(1).md",
+      "metadata_path": "output/extraction/PaySlip_23Feb24_Cindy(1)-hmoney-metadata.json"
+    },
+    {
+      "file": "CommValReport17042024.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 49.88,
+      "md_path": "output/extraction/CommValReport17042024.md",
+      "metadata_path": "output/extraction/CommValReport17042024-hmoney-metadata.json"
+    },
+    {
+      "file": "Recent Transactions 590k.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 8.44,
+      "md_path": "output/extraction/Recent Transactions 590k.md",
+      "metadata_path": "output/extraction/Recent Transactions 590k-hmoney-metadata.json"
+    },
+    {
+      "file": "Receipt_5575.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 11.84,
+      "md_path": "output/extraction/Receipt_5575.md",
+      "metadata_path": "output/extraction/Receipt_5575-hmoney-metadata.json"
+    },
+    {
+      "file": "PaySlip_Bonus_Cindy(1).pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 15.42,
+      "md_path": "output/extraction/PaySlip_Bonus_Cindy(1).md",
+      "metadata_path": "output/extraction/PaySlip_Bonus_Cindy(1)-hmoney-metadata.json"
+    },
+    {
+      "file": "Tlamee Pty Ltd  - Accountant Letter 18042024.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 10.87,
+      "md_path": "output/extraction/Tlamee Pty Ltd  - Accountant Letter 18042024.md",
+      "metadata_path": "output/extraction/Tlamee Pty Ltd  - Accountant Letter 18042024-hmoney-metadata.json"
+    },
+    {
+      "file": "Refinance Summary Report.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 19.61,
+      "md_path": "output/extraction/Refinance Summary Report.md",
+      "metadata_path": "output/extraction/Refinance Summary Report-hmoney-metadata.json"
+    },
+    {
+      "file": "ValuationConfirmationLetter_04042024.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 18.43,
+      "md_path": "output/extraction/ValuationConfirmationLetter_04042024.md",
+      "metadata_path": "output/extraction/ValuationConfirmationLetter_04042024-hmoney-metadata.json"
+    },
+    {
+      "file": "cal - xin wang.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 19.96,
+      "md_path": "output/extraction/cal - xin wang.md",
+      "metadata_path": "output/extraction/cal - xin wang-hmoney-metadata.json"
+    },
+    {
+      "file": "contract.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 16.99,
+      "md_path": "output/extraction/contract.md",
+      "metadata_path": "output/extraction/contract-hmoney-metadata.json"
+    },
+    {
+      "file": "controller.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 19.25,
+      "md_path": "output/extraction/controller.md",
+      "metadata_path": "output/extraction/controller-hmoney-metadata.json"
+    },
+    {
+      "file": "council rate.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 20.08,
+      "md_path": "output/extraction/council rate.md",
+      "metadata_path": "output/extraction/council rate-hmoney-metadata.json"
+    },
+    {
+      "file": "eStatement590k.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 22.63,
+      "md_path": "output/extraction/eStatement590k.md",
+      "metadata_path": "output/extraction/eStatement590k-hmoney-metadata.json"
+    },
+    {
+      "file": "eStatement1.23m.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 36.96,
+      "md_path": "output/extraction/eStatement1.23m.md",
+      "metadata_path": "output/extraction/eStatement1.23m-hmoney-metadata.json"
+    },
+    {
+      "file": "loan account 2024 1.23m.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 10.0,
+      "md_path": "output/extraction/loan account 2024 1.23m.md",
+      "metadata_path": "output/extraction/loan account 2024 1.23m-hmoney-metadata.json"
+    },
+    {
+      "file": "SOCA(1).pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 73.03,
+      "md_path": "output/extraction/SOCA(1).md",
+      "metadata_path": "output/extraction/SOCA(1)-hmoney-metadata.json"
+    },
+    {
+      "file": "Daily Transaction.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 118.89,
+      "md_path": "output/extraction/Daily Transaction.md",
+      "metadata_path": "output/extraction/Daily Transaction-hmoney-metadata.json"
+    },
+    {
+      "file": "form.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 32.05,
+      "md_path": "output/extraction/form.md",
+      "metadata_path": "output/extraction/form-hmoney-metadata.json"
+    },
+    {
+      "file": "pricing.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 15.5,
+      "md_path": "output/extraction/pricing.md",
+      "metadata_path": "output/extraction/pricing-hmoney-metadata.json"
+    },
+    {
+      "file": "xin 08 Mar paysilp.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 12.6,
+      "md_path": "output/extraction/xin 08 Mar paysilp.md",
+      "metadata_path": "output/extraction/xin 08 Mar paysilp-hmoney-metadata.json"
+    },
+    {
+      "file": "xin 23 Feb paysilp.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 15.45,
+      "md_path": "output/extraction/xin 23 Feb paysilp.md",
+      "metadata_path": "output/extraction/xin 23 Feb paysilp-hmoney-metadata.json"
+    },
+    {
+      "file": "visa.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 26.28,
+      "md_path": "output/extraction/visa.md",
+      "metadata_path": "output/extraction/visa-hmoney-metadata.json"
+    },
+    {
+      "file": "xin bonus payslip.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 17.89,
+      "md_path": "output/extraction/xin bonus payslip.md",
+      "metadata_path": "output/extraction/xin bonus payslip-hmoney-metadata.json"
+    },
+    {
+      "file": "xinyu ID.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 10.03,
+      "md_path": "output/extraction/xinyu ID.md",
+      "metadata_path": "output/extraction/xinyu ID-hmoney-metadata.json"
+    },
+    {
+      "file": "xin id.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 22.7,
+      "md_path": "output/extraction/xin id.md",
+      "metadata_path": "output/extraction/xin id-hmoney-metadata.json"
+    },
+    {
+      "file": "xin 9 Feb paysilp.pdf",
+      "success": true,
+      "extraction_error": null,
+      "save_success": true,
+      "duration_seconds": 25.7,
+      "md_path": "output/extraction/xin 9 Feb paysilp.md",
+      "metadata_path": "output/extraction/xin 9 Feb paysilp-hmoney-metadata.json"
+    }
+  ],
+  "summary": {
+    "success": 33,
+    "failed": 0
+  }
+}
