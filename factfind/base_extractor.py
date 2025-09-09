@@ -18,8 +18,7 @@ from dotenv import load_dotenv
 # Import FactFinder using absolute import
 from factfind.fact_aggregator import FactAggregator
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 logger = logging.getLogger(__name__)
 
 # Generic type for Pydantic models

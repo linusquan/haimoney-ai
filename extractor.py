@@ -22,7 +22,7 @@ from extraction.gemini_file_extract import GeminiFileExtractor, ExtractionResult
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
+    format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(funcName)s() - %(message)s',
     handlers=[
         logging.StreamHandler(),
         logging.FileHandler('extractor.log')

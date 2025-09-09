@@ -13,9 +13,6 @@ from dotenv import load_dotenv
 import google.generativeai as genai
 from pydantic import BaseModel
 from PIL import Image
-
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 DEFAULT_MODEL = 'gemini-2.5-flash'

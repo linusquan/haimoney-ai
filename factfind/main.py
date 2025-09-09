@@ -14,7 +14,7 @@ from factfind.basic.basic_fact import BasicFactExtractor
 from factfind.asset.asset_extraction import AssetExtractor
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(funcName)s() - %(message)s')
 logger = logging.getLogger(__name__)
 
 def print_separator(title: str):
