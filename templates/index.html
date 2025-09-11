@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extraction File</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .status-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #007bff;
+        }
+        
+        .progress-container {
+            background: #e9ecef;
+            border-radius: 25px;
+            padding: 3px;
+            margin: 15px 0;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #28a745, #20c997);
+            height: 25px;
+            border-radius: 25px;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            min-width: 0;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-box {
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .start-button {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .start-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+        }
+        
+        .start-button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .current-file {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        
+        .status-messages {
+            max-height: 200px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 10px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        
+        .message {
+            margin: 5px 0;
+            padding: 3px 0;
+        }
+        
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .info { color: #007bff; }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+        
+        .pulsing {
+            animation: pulse 2s infinite;
+        }
+        
+        .analysis-results {
+            margin-top: 20px;
+        }
+        
+        .result-category {
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .result-category h4 {
+            margin: 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            color: #495057;
+        }
+        
+        .json-display {
+            background: #f8f9fa;
+            border: none;
+            margin: 0;
+            padding: 15px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📄 Extraction progress</h1>
+        
+        <div class="status-card">
+            <h3>Extraction Status: <span id="status">Ready</span></h3>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-number" id="totalFiles">0</div>
+                    <div class="stat-label">Total Files</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="completedFiles">0</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="progressPercent">0%</div>
+                    <div class="stat-label">Progress</div>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar" style="width: 0%;">
+                    <span id="progressText">0/0</span>
+                </div>
+            </div>
+            
+            <div id="currentFileDiv" class="current-file" style="display: none;">
+                Current: <span id="currentFile"></span>
+            </div>
+        </div>
+        
+        <button id="startButton" class="start-button" onclick="startExtraction()">
+            🚀 Start Extraction
+        </button>
+        
+        <div class="status-messages" id="messages"></div>
+        
+        <!-- Analysis Section -->
+        <div class="status-card" id="analysisSection" style="display: none;">
+            <h3>Analysis Status: <span id="analysisStatus">Ready</span></h3>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="analysisProgressBar" style="width: 0%;">
+                    <span id="analysisProgressText">Analysis Progress</span>
+                </div>
+            </div>
+            
+            <div id="analysisStage" class="current-file" style="display: none;">
+                Stage: <span id="currentStage"></span>
+            </div>
+        </div>
+        
+        <!-- Analysis Results Section -->
+        <div class="status-card" id="resultsSection" style="display: none;">
+            <h3>📊 Analysis Results</h3>
+            
+            <div class="analysis-results">
+                <div class="result-category" id="basic_factResult" style="display: none;">
+                    <h4>💼 Basic Information</h4>
+                    <pre class="json-display" id="basic_factData"></pre>
+                </div>
+                
+                <div class="result-category" id="assetResult" style="display: none;">
+                    <h4>🏠 Assets</h4>
+                    <pre class="json-display" id="assetData"></pre>
+                </div>
+                
+                <div class="result-category" id="liabilityResult" style="display: none;">
+                    <h4>💳 Liabilities</h4>
+                    <pre class="json-display" id="liabilityData"></pre>
+                </div>
+                
+                <div class="result-category" id="incomeResult" style="display: none;">
+                    <h4>💰 Income</h4>
+                    <pre class="json-display" id="incomeData"></pre>
+                </div>
+                
+                <div class="result-category" id="expenseResult" style="display: none;">
+                    <h4>🧾 Expenses</h4>
+                    <pre class="json-display" id="expenseData"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io();
+        let isRunning = false;
+        
+        // DOM elements
+        const statusEl = document.getElementById('status');
+        const totalFilesEl = document.getElementById('totalFiles');
+        const completedFilesEl = document.getElementById('completedFiles');
+        const progressPercentEl = document.getElementById('progressPercent');
+        const progressBarEl = document.getElementById('progressBar');
+        const progressTextEl = document.getElementById('progressText');
+        const currentFileEl = document.getElementById('currentFile');
+        const currentFileDivEl = document.getElementById('currentFileDiv');
+        const startButtonEl = document.getElementById('startButton');
+        const messagesEl = document.getElementById('messages');
+        
+        // Analysis DOM elements
+        const analysisSectionEl = document.getElementById('analysisSection');
+        const analysisStatusEl = document.getElementById('analysisStatus');
+        const analysisProgressBarEl = document.getElementById('analysisProgressBar');
+        const analysisProgressTextEl = document.getElementById('analysisProgressText');
+        const analysisStageEl = document.getElementById('analysisStage');
+        const currentStageEl = document.getElementById('currentStage');
+        const resultsSectionEl = document.getElementById('resultsSection');
+        
+        // Socket event handlers
+        socket.on('connect', function() {
+            addMessage('Connected to server', 'info');
+        });
+        
+        socket.on('status_update', function(data) {
+            updateUI(data);
+        });
+        
+        socket.on('progress_update', function(data) {
+            updateProgress(data);
+            addMessage(data.status, data.status.includes('✅') ? 'success' : 
+                      data.status.includes('❌') ? 'error' : 'info');
+        });
+        
+        socket.on('extraction_started', function(data) {
+            isRunning = true;
+            statusEl.textContent = 'Running';
+            statusEl.classList.add('pulsing');
+            startButtonEl.disabled = true;
+            startButtonEl.textContent = '⏳ Extraction Running...';
+            addMessage(data.message, 'info');
+        });
+        
+        socket.on('extraction_complete', function(data) {
+            isRunning = false;
+            statusEl.textContent = 'Complete';
+            statusEl.classList.remove('pulsing');
+            startButtonEl.disabled = false;
+            startButtonEl.textContent = '🚀 Start Extraction';
+            currentFileDivEl.style.display = 'none';
+            addMessage(`🎉 ${data.message} - Success: ${data.successful}, Failed: ${data.failed}`, 'success');
+        });
+        
+        socket.on('extraction_error', function(data) {
+            isRunning = false;
+            statusEl.textContent = 'Error';
+            statusEl.classList.remove('pulsing');
+            startButtonEl.disabled = false;
+            startButtonEl.textContent = '🚀 Start Extraction';
+            addMessage(data.message, 'error');
+        });
+        
+        // Analysis event handlers
+        socket.on('analysis_started', function(data) {
+            analysisSectionEl.style.display = 'block';
+            analysisStatusEl.textContent = 'Running';
+            analysisStatusEl.classList.add('pulsing');
+            analysisProgressBarEl.style.width = '20%';
+            analysisProgressTextEl.textContent = 'Analysis Started';
+            analysisStageEl.style.display = 'block';
+            currentStageEl.textContent = data.stage;
+            addMessage(data.message, 'info');
+        });
+        
+        socket.on('analysis_progress', function(data) {
+            analysisProgressBarEl.style.width = '50%';
+            analysisProgressTextEl.textContent = data.stage;
+            currentStageEl.textContent = data.message;
+            addMessage(data.message, 'info');
+        });
+        
+        socket.on('analysis_complete', function(data) {
+            analysisStatusEl.textContent = 'Complete';
+            analysisStatusEl.classList.remove('pulsing');
+            analysisProgressBarEl.style.width = '100%';
+            analysisProgressTextEl.textContent = 'Analysis Complete';
+            analysisStageEl.style.display = 'none';
+            addMessage(data.message, 'success');
+        });
+        
+        socket.on('analysis_error', function(data) {
+            analysisStatusEl.textContent = 'Error';
+            analysisStatusEl.classList.remove('pulsing');
+            analysisProgressBarEl.style.width = '0%';
+            analysisProgressTextEl.textContent = 'Analysis Failed';
+            addMessage(data.message, 'error');
+        });
+        
+        socket.on('analysis_result', function(data) {
+            displayAnalysisResult(data.category, data.data);
+            addMessage(data.message, 'success');
+        });
+        
+        socket.on('analysis_log', function(data) {
+            const messageType = data.type === 'error' ? 'error' : 'info';
+            addMessage(data.message, messageType);
+        });
+        
+        function updateUI(data) {
+            totalFilesEl.textContent = data.total_files || 0;
+            completedFilesEl.textContent = data.completed_files || 0;
+            
+            const total = data.total_files || 0;
+            const completed = data.completed_files || 0;
+            const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+            
+            progressPercentEl.textContent = percent + '%';
+            progressBarEl.style.width = percent + '%';
+            progressTextEl.textContent = `${completed}/${total}`;
+            
+            if (data.current_file) {
+                currentFileEl.textContent = data.current_file;
+                currentFileDivEl.style.display = 'block';
+            }
+            
+            isRunning = data.is_running;
+            if (isRunning) {
+                statusEl.textContent = 'Running';
+                statusEl.classList.add('pulsing');
+                startButtonEl.disabled = true;
+                startButtonEl.textContent = '⏳ Extraction Running...';
+            } else {
+                statusEl.classList.remove('pulsing');
+                startButtonEl.disabled = false;
+                startButtonEl.textContent = '🚀 Start Extraction';
+            }
+        }
+        
+        function updateProgress(data) {
+            updateUI(data);
+        }
+        
+        function addMessage(message, type) {
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${type}`;
+            messageEl.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            messagesEl.appendChild(messageEl);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+        
+        function displayAnalysisResult(category, data) {
+            resultsSectionEl.style.display = 'block';
+            
+            const resultElement = document.getElementById(category + 'Result');
+            const dataElement = document.getElementById(category + 'Data');
+            
+            if (resultElement && dataElement) {
+                resultElement.style.display = 'block';
+                dataElement.textContent = JSON.stringify(data, null, 2);
+            }
+        }
+        
+        function startExtraction() {
+            if (isRunning) return;
+            
+            fetch('/start_extraction', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'}
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    addMessage(data.error, 'error');
+                } else {
+                    addMessage('Extraction request sent', 'info');
+                }
+            })
+            .catch(error => {
+                addMessage('Failed to start extraction: ' + error, 'error');
+            });
+        }
+    </script>
+</body>
+</html>

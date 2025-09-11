@@ -31,7 +31,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 class FileProcessor:
-    def __init__(self, input_dir: str = "output/user_upload", output_dir: str = None, timeout_seconds: int = 120, batch_size: int = 3):
+    def __init__(self, input_dir: str = "output/user_upload", output_dir: str = None, timeout_seconds: int = 240, batch_size: int = 3):
         """
         Initialize the file processor
         
@@ -46,6 +46,10 @@ class FileProcessor:
         self.timeout_seconds = timeout_seconds
         self.batch_size = batch_size
         self.extractor = None
+        
+        # Progress tracking
+        self.total_files = 0
+        self.completed_files = 0
         
         # Create output directory if it doesn't exist
         self.output_dir.mkdir(parents=True, exist_ok=True)
@@ -213,9 +217,11 @@ class FileProcessor:
         }
         
         if result.success:
-            logger.info(f"✅ [{index}/{total}] Success: {file_path.name} ({duration:.2f}s)")
+            self.completed_files += 1
+            logger.info(f"Progress: [{self.completed_files}/{self.total_files}]")
         else:
-            logger.error(f"❌ [{index}/{total}] Failed: {file_path.name} ({duration:.2f}s) - {result.error}")
+            self.completed_files += 1
+            logger.error(f"❌ One extraction failed Failed: {file_path.name} ({duration:.2f}s) - {result.error}")
         
         return summary
 
@@ -235,6 +241,10 @@ class FileProcessor:
         max_concurrent = self.batch_size  # Reuse batch_size as max_concurrent
         total_files = len(files)
         results = []
+        
+        # Initialize progress tracking
+        self.total_files = total_files
+        self.completed_files = 0
         
         logger.info(f"🚀 Starting pipeline processing with max {max_concurrent} concurrent extractions")
         
@@ -265,7 +275,7 @@ class FileProcessor:
                         results.append(result)
                         
                         if result["success"]:
-                            logger.info(f"✅ [{file_index}/{total_files}] Completed: {file_path.name}")
+                          logger.info(f"Progress [{file_index}/{total_files}] Completed: {file_path.name}")
                         else:
                             logger.error(f"❌ [{file_index}/{total_files}] Failed: {file_path.name}")
                             

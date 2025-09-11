@@ -40,8 +40,7 @@ def ensure_output_directory():
 def write_results_to_file(category_name: str, results, output_dir: Path):
     """Write results to JSON file in the output directory"""
     try:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"{category_name}_{timestamp}.json"
+        filename = f"{category_name}.json"
         filepath = output_dir / filename
         
         results_data = results.model_dump()
