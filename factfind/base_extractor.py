@@ -148,7 +148,7 @@ class BaseAnalyser(ABC, Generic[T]):
                 model=self.model,
                 input=[
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": "This is the content I would like to be analysed: " + content + "completed analysis content"}
+                    {"role": "user", "content": "This is the content I would like to be analysed: " + content + "completed analysis content."}
                 ],
                 text_format=model_class
             )

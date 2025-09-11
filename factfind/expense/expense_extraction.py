@@ -10,8 +10,9 @@ from typing import List, Type
 from enum import Enum
 from pydantic import BaseModel, Field
 
-# Import base_extractor using absolute import
+# Import base_extractor and shared models using absolute import
 from factfind.base_extractor import BaseAnalyser
+from factfind.shared_models import DetailedSource
 
 # Enums for controlled vocabulary
 class ExpenseType(str, Enum):
@@ -58,18 +59,18 @@ class Expense(BaseModel):
     ownership: str = Field(description="Ownership details (e.g., 'YZ 50.0% - YO 50.0%', 'MZ 100.0%')")
     frequency: ExpenseFrequency = Field(description="Frequency of expense (e.g., 'Monthly', 'Annually')")
     amount: float = Field(ge=0, description="Amount as number (e.g., 800, 200, 2000)")
-    source: List[str] = Field(default=[], description="Source documents where this expense was found")
+    source: List[DetailedSource] = Field(default=[], description="Source documents where this expense was found in detail to file path and page, if there are multiple pages, use the most relevant page")
     reason: str = Field(description="Reasons to how this expense is counted in 200 words sumary: e.g. the applicant has 500$ shown on the city countil bill quaterly.")
 
 class ExpenseExtraction(BaseModel):
     """Schema for extracting expense information from multiple applicants"""
     expenses: List[Expense] = Field(description="List of all expenses found in the documents")
 
-class ExpenseExtractor(BaseAnalyser[ExpenseExtraction]):
+class ExpenseAnalyser(BaseAnalyser[ExpenseExtraction]):
     """Expense extractor using BaseExtractor"""
     
     def __init__(self, api_key: str = None):
-        super().__init__(api_key=api_key, model='gpt-5')
+        super().__init__(api_key=api_key, model='gpt-5-mini')
     
     def get_model_class(self) -> Type[ExpenseExtraction]:
         """Return the Pydantic model class for expense extraction"""

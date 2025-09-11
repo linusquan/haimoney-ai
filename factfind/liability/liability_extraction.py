@@ -45,7 +45,7 @@ class Liability(BaseModel):
     lender: str = Field(description="Lender's name (e.g., 'CBA', 'Bankwest')")
     amount_owing: float = Field(ge=0, description="Amount owing as number (e.g., 639392, 40000)")
     limit: float = Field(ge=0, description="Limit of liability, for credit cards this is the limit, for others equal to amount owing")
-    source: List[DetailedSource] = Field(default=[], description="Source documents where this liability was found")
+    source: List[DetailedSource] = Field(default=[], description="Source documents where this liability was found in detail to file path and page, if there are multiple pages, use the most relevant page")
 
 class MultipleApplicantsLiabilities(BaseModel):
     """Schema for extracting liability information from multiple applicants"""
