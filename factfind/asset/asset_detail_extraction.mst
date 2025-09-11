@@ -16,8 +16,7 @@ Key attributes for each asset you are extracting:
     5. value: 
       value in australian dollar
     6. valueBasis:
-      value's basis, if it is from confirmed source document then it is Certified Valuation
-      if it is coming from broker_notation it is coming from client's own claim, this is known as Applicant  
+      value's basis, always Applicant Estimate for the time being
 
 One of the example represented in table format:
 
@@ -25,9 +24,6 @@ One of the example represented in table format:
 |------------------|--------------------------------------|--------------------------|-------------|--------------------|
 | Real Estate      | INV-5 Strutt Cr Metford              | YZ 100.0%                | $992,000    | Applicant Estimate |
 | Real Estate      | OO-20 Coronga Cr Killara             | YZ 50.0% - YO 50.0%      | $7,500,000  | Applicant Estimate |
-| Real Estate      | INV-71/330 King St Mascot            | YZ 50.0% - YO 50.0%      | $1,275,000  | Certified Valuation|
-| Real Estate      | INV-2304s/889 Collins St Docklands   | YZ 100.0%                | $1,100,000  | Certified Valuation|
-| Real Estate      | INV-7/112-114 The Lake Way Forster   | YZ 50.0% - YO 50.0%      | $568,318    | Certified Valuation|
 | Real Estate      | Land - 22 Gleneagles Ave Killara 2071| YZ 50.0% - YO 50.0%      | $3,300,000  | Applicant Estimate |
 | Motor Vehicle    | Benz S600                            | YZ 100.0%                | $300,000    | Applicant Estimate |
 | Motor Vehicle    | Audi Q5                              | YO 100.0%                | $80,000     | Applicant Estimate |
@@ -94,7 +90,7 @@ end of 002_TransactionSummary 2.md unisuper
 the the extracted data would contain:
 | Asset Category   | Description                          | Ownership                | Value       | Valuation Method   |
 |------------------|--------------------------------------|--------------------------|-------------|--------------------|
-| Superannuation      | uni super   | JC100%      | 176,911.20    | Certified Valuation|
+| Superannuation      | uni super   | JC100%      | 176,911.20    | Applicant Estimate|
 
 IMPORTANT - Source Field Requirements
 
