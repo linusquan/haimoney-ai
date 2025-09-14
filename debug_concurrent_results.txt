@@ -1,0 +1,30 @@
+Concurrent Extraction Debug Results
+===================================
+
+Files processed: 2
+
+File 1: rental.pdf
+Success: True
+Description: Ownership Statement
+Error: None
+Content length: 2706 characters
+Content preview (first 200 chars):
+HRG Harmony Realty Group
+HARMONY REALTY GROUP
+
+Harmony Realty Group
+1304/370 Pitt Street, Sydney, NSW, 2000
+Ph: 0451725688 Fax:
+rentals@hrgrealestate.com.au
+
+OWNERSHIP STATEMENT #82 - YuFan Lai & Fan 
+
+----------------------------------------
+
+File 2: bill.pdf
+Success: False
+Description: None
+Error: Response parsing error: Expecting value: line 1 column 1 (char 0)
+
+----------------------------------------
+

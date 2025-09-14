@@ -109,7 +109,7 @@ class OpenAIFileManager:
         self.uploaded_files["upload_sessions"].append(session_info)
         self.save_file_ids()
         
-        print(f"📊 Upload complete: {len(uploaded_files)} files uploaded")
+        print(f"Upload complete: {len(uploaded_files)} files uploaded")
         return uploaded_files
     
     def get_all_file_ids(self):
@@ -125,7 +125,7 @@ class OpenAIFileManager:
             return None
         
         try:
-            print(f"🔍 Analyzing {len(file_ids)} files with structured output...")
+            print(f"Analyzing {len(file_ids)} files with structured output...")
             
             # Create content with all files
             content = []
@@ -147,7 +147,7 @@ class OpenAIFileManager:
                 text_format=FileAnalysis,
             )
             
-            print("📊 Analysis complete!")
+            print("Analysis complete!")
             return response.output_parsed
             
         except Exception as e:

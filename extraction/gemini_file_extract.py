@@ -17,21 +17,6 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_MODEL = 'gemini-2.5-flash'
 
-def _load_system_prompt() -> str:
-    """Load the system prompt from external file"""
-    try:
-        prompt_path = Path(__file__).parent / "system_prompt.txt"
-        with open(prompt_path, 'r', encoding='utf-8') as f:
-            return f.read().strip()
-    except FileNotFoundError:
-        logger.error(f"❌ System prompt file not found: {prompt_path}")
-        raise FileNotFoundError(f"System prompt file not found: {prompt_path}")
-    except Exception as e:
-        logger.error(f"❌ Error loading system prompt: {e}")
-        raise
-
-# Load system prompt at module import
-SYSTEM_PROMPT = _load_system_prompt()
 
 class ExtractionResponse(BaseModel):
     """Pydantic model for structured extraction response"""
@@ -87,8 +72,22 @@ class GeminiFileExtractor:
         # Configure the API key
         genai.configure(api_key=api_key)
         self.model = genai.GenerativeModel(DEFAULT_MODEL)
+        self.system_prompt = self._load_system_prompt()
         logger.info(f"✅ Initialized Gemini File Extractor with model: {DEFAULT_MODEL}")
     
+    def _load_system_prompt(self) -> str:
+        """Load the system prompt from external file"""
+        try:
+            prompt_path = Path(__file__).parent / "system_prompt.txt"
+            with open(prompt_path, 'r', encoding='utf-8') as f:
+                return f.read().strip()
+        except FileNotFoundError:
+            logger.error(f"❌ System prompt file not found: {prompt_path}")
+            raise FileNotFoundError(f"System prompt file not found: {prompt_path}")
+        except Exception as e:
+            logger.error(f"❌ Error loading system prompt: {e}")
+            raise
+
     def _get_file_info(self, file_path: str) -> FileInfo:
         """
         Get file information including mime type and file type
@@ -162,19 +161,19 @@ class GeminiFileExtractor:
             if not extraction_prompt:
                 extraction_prompt = "Extract all information from this file"
             
-            logger.info(f"🔍 Extracting data from: {file_info['filename']} ({file_info['file_type']})")
-            logger.info(f"📄 File path: {file_path}")
-            logger.info(f"📊 MIME type: {file_info['mime_type']}")
+            logger.info(f"Extracting data from: {file_info['filename']} ({file_info['file_type']})")
+            logger.info(f"File path: {file_path}")
+            logger.info(f"MIME type: {file_info['mime_type']}")
             
             # Prepare content based on file type
             if file_info['file_type'] == 'image':
                 # Load image for image files
                 image = Image.open(file_path)
-                content = [f"{SYSTEM_PROMPT}\n\n{extraction_prompt}", image]
+                content = [f"{self.system_prompt}\n\n{extraction_prompt}", image]
             else:
                 # Upload document file for processing
                 uploaded_file = genai.upload_file(path=file_path, mime_type=file_info['mime_type'])
-                content = [f"{SYSTEM_PROMPT}\n\n{extraction_prompt}", uploaded_file]
+                content = [f"{self.system_prompt}\n\n{extraction_prompt}", uploaded_file]
             
             # Configure for structured output
             generation_config = genai.GenerationConfig(

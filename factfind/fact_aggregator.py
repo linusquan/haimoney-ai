@@ -138,7 +138,7 @@ end of {md_file.name}
         Returns:
             Combined output string
         """
-        logger.info("🔍 Starting fact finding process")
+        logger.info("Starting fact finding process")
         
         # Discover all .md files
         md_files = self.discover_md_files()

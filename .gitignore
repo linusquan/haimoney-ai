@@ -58,6 +58,9 @@ Thumbs.db
 output/
 output2/
 
+# Test output directory
+.test_output/
+
 # Logs
 *.log
 logs/

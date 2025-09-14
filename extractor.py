@@ -194,7 +194,7 @@ class FileProcessor:
         Returns:
             Dictionary with processing results
         """
-        logger.info(f"🔍 [{index}/{total}] Processing: {file_path.name}")
+        logger.info(f"[{index}/{total}] Processing: {file_path.name}")
         
         # Get output paths
         md_path, metadata_path = self.get_output_paths(file_path)
@@ -259,7 +259,7 @@ class FileProcessor:
                 file_path = remaining_files.pop(0)
                 file_counter += 1
                 
-                logger.info(f"🔍 [{file_counter}/{total_files}] Starting: {file_path.name}")
+                logger.info(f"[{file_counter}/{total_files}] Starting: {file_path.name}")
                 future = executor.submit(self.process_file, file_path, file_counter, total_files)
                 active_futures[future] = (file_path, file_counter)
             
@@ -296,13 +296,13 @@ class FileProcessor:
                         next_file = remaining_files.pop(0)
                         file_counter += 1
                         
-                        logger.info(f"🔍 [{file_counter}/{total_files}] Starting: {next_file.name}")
+                        logger.info(f"[{file_counter}/{total_files}] Starting: {next_file.name}")
                         new_future = executor.submit(self.process_file, next_file, file_counter, total_files)
                         active_futures[new_future] = (next_file, file_counter)
                     
                     break  # Process one completion at a time
         
-        logger.info(f"🏁 Pipeline processing complete: {len(results)} files processed")
+        logger.info(f"Pipeline processing complete: {len(results)} files processed")
         return results
 
     def run(self) -> Dict[str, Any]:
@@ -339,7 +339,7 @@ class FileProcessor:
             }
         }
         
-        logger.info(f"🏁 Processing complete: {success_count} successful, {failed_count} failed")
+        logger.info(f"Processing complete: {success_count} successful, {failed_count} failed")
         return summary
 
 def main():
@@ -350,7 +350,7 @@ def main():
         results = processor.run()
         
         # Print final summary
-        print(f"\n📊 EXTRACTION SUMMARY:")
+        print(f"\nEXTRACTION SUMMARY:")
         print(f"   Total files: {results['summary']['success'] + results['summary']['failed']}")
         print(f"   Successful: {results['summary']['success']}")
         print(f"   Failed: {results['summary']['failed']}")
