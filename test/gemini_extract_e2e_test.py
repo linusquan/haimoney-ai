@@ -3,14 +3,30 @@
 E2E Test Suite for Gemini File Extraction
 """
 import unittest
+import shutil
 from pathlib import Path
-from datetime import datetime
 
 from tools.file_extract import GeminiFileExtractor
 
 
 class TestGeminiFileExtraction(unittest.TestCase):
     """Test suite for Gemini file extraction functionality"""
+
+    @classmethod
+    def setUpClass(cls):
+        """Set up test fixtures once before all test methods"""
+        cls.test_dir = Path(__file__).parent
+        cls.output_dir = cls.test_dir / ".test_output" / "gemini_output"
+
+        # Clean the gemini_output directory contents before all tests
+        if cls.output_dir.exists():
+            for item in cls.output_dir.iterdir():
+                if item.is_file():
+                    item.unlink()
+                elif item.is_dir():
+                    shutil.rmtree(item)
+        else:
+            cls.output_dir.mkdir(parents=True, exist_ok=True)
 
     def setUp(self):
         """Set up test fixtures before each test method"""
@@ -19,10 +35,8 @@ class TestGeminiFileExtraction(unittest.TestCase):
         self.pdf_file = self.test_dir / "test_files" / "test_document.pdf"
         self.image_file = self.test_dir / "test_files" / "test_image.jpg"
 
-        # Create output directory with timestamp
-        self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.output_dir = self.test_dir / ".test_output" / self.timestamp
-        self.output_dir.mkdir(parents=True, exist_ok=True)
+        # Use the class-level output directory
+        self.output_dir = self.__class__.output_dir
 
 
     def test_pdf_extraction(self):
@@ -37,10 +51,9 @@ class TestGeminiFileExtraction(unittest.TestCase):
         self.assertIsNotNone(result.description, "PDF extraction description is None")
 
         # Store result to file
-        output_file = self.output_dir / f"pdf_extraction_{self.timestamp}.md"
+        output_file = self.output_dir / "pdf_extraction.md"
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(f"PDF Extraction Test Results\n")
-            f.write(f"Timestamp: {self.timestamp}\n")
             f.write(f"File: {self.pdf_file.name}\n")
             f.write(f"Description: {result.description}\n")
             f.write(f"Content length: {len(result.result)} characters\n")
@@ -61,10 +74,9 @@ class TestGeminiFileExtraction(unittest.TestCase):
         self.assertIsNotNone(result.description, "Image extraction description is None")
 
         # Store result to file
-        output_file = self.output_dir / f"image_extraction_{self.timestamp}.md"
+        output_file = self.output_dir / "image_extraction.md"
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(f"Image Extraction Test Results\n")
-            f.write(f"Timestamp: {self.timestamp}\n")
             f.write(f"File: {self.image_file.name}\n")
             f.write(f"Description: {result.description}\n")
             f.write(f"Content length: {len(result.result)} characters\n")
