@@ -21,11 +21,11 @@ sys.path.append(os.path.dirname(__file__))
 from extractor import FileProcessor
 
 # Import factfind modules for direct analysis
-from factfind.basic.basic_fact import BasicFactAnalyser
-from factfind.asset.asset_extraction import AssetAnalyser
-from factfind.liability.liability_extraction import LiabilityAnalyser
-from factfind.income.income_extraction import IncomeAnalyser
-from factfind.expense.expense_extraction import ExpenseAnalyser
+from tools.factfind.basic.basic_fact import BasicFactAnalyser
+from tools.factfind.asset.asset_extraction import AssetAnalyser
+from tools.factfind.liability.liability_extraction import LiabilityAnalyser
+from tools.factfind.income.income_extraction import IncomeAnalyser
+from tools.factfind.expense.expense_extraction import ExpenseAnalyser
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Configure logging for web application

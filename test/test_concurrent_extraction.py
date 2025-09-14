@@ -122,7 +122,7 @@ class TestConcurrentExtraction(unittest.TestCase):
     def _save_test_results(self, test_name: str, results: List[ExtractionResult]):
         """Save test results to files for inspection"""
         try:
-            output_file = self.output_dir / f"{test_name}_{self.timestamp}.txt"
+            output_file = self.output_dir / f"{test_name}_{self.timestamp}.md"
             with open(output_file, 'w', encoding='utf-8') as f:
                 f.write(f"Test Results: {test_name}\n")
                 f.write(f"Timestamp: {self.timestamp}\n")

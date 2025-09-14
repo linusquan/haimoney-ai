@@ -15,11 +15,11 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # No longer need to manipulate sys.path with absolute imports
 
-from factfind.basic.basic_fact import BasicFactAnalyser
-from factfind.asset.asset_extraction import AssetAnalyser
-from factfind.liability.liability_extraction import LiabilityAnalyser
-from factfind.income.income_extraction import IncomeAnalyser
-from factfind.expense.expense_extraction import ExpenseAnalyser
+from tools.factfind.basic.basic_fact import BasicFactAnalyser
+from tools.factfind.asset.asset_extraction import AssetAnalyser
+from tools.factfind.liability.liability_extraction import LiabilityAnalyser
+from tools.factfind.income.income_extraction import IncomeAnalyser
+from tools.factfind.expense.expense_extraction import ExpenseAnalyser
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(funcName)s() - %(message)s')

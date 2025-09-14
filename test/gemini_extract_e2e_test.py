@@ -37,7 +37,7 @@ class TestGeminiFileExtraction(unittest.TestCase):
         self.assertIsNotNone(result.description, "PDF extraction description is None")
 
         # Store result to file
-        output_file = self.output_dir / f"pdf_extraction_{self.timestamp}.txt"
+        output_file = self.output_dir / f"pdf_extraction_{self.timestamp}.md"
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(f"PDF Extraction Test Results\n")
             f.write(f"Timestamp: {self.timestamp}\n")
@@ -61,7 +61,7 @@ class TestGeminiFileExtraction(unittest.TestCase):
         self.assertIsNotNone(result.description, "Image extraction description is None")
 
         # Store result to file
-        output_file = self.output_dir / f"image_extraction_{self.timestamp}.txt"
+        output_file = self.output_dir / f"image_extraction_{self.timestamp}.md"
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(f"Image Extraction Test Results\n")
             f.write(f"Timestamp: {self.timestamp}\n")

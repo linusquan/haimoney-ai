@@ -78,7 +78,7 @@ class GeminiFileExtractor:
     def _load_system_prompt(self) -> str:
         """Load the system prompt from external file"""
         try:
-            prompt_path = Path(__file__).parent / "system_prompt.txt"
+            prompt_path = Path(__file__).parent / "system_prompt.md"
             with open(prompt_path, 'r', encoding='utf-8') as f:
                 return f.read().strip()
         except FileNotFoundError:

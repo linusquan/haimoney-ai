@@ -11,8 +11,8 @@ from enum import Enum
 from pydantic import BaseModel, Field
 
 # Import base_extractor and shared models using absolute import
-from factfind.base_extractor import BaseAnalyser
-from factfind.shared_models import DetailedSource
+from tools.factfind.base_extractor import BaseAnalyser
+from tools.factfind.shared_models import DetailedSource
 
 # Enums for controlled vocabulary
 class ExpenseType(str, Enum):

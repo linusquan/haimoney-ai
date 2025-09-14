@@ -16,7 +16,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 
 # Import FactFinder using absolute import
-from factfind.fact_aggregator import FactAggregator
+from tools.factfind.fact_aggregator import FactAggregator
 
 
 logger = logging.getLogger(__name__)
@@ -63,8 +63,6 @@ class BaseAnalyser(ABC, Generic[T]):
     def get_default_template_path(self) -> str:
         """Return the default template file path"""
         pass
-    
-    
     
     def load_system_prompt(self, template_path: str = None) -> str:
         """
@@ -182,8 +180,6 @@ class BaseAnalyser(ABC, Generic[T]):
             
             # Generate factfind content
             content = self.generate_factfind_content(extraction_dir)
-            
-            
             # Extract data
             extraction = self.extract_data(content, system_prompt)
             

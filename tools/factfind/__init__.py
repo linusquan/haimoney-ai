@@ -6,9 +6,9 @@ using OpenAI's structured output capabilities.
 """
 
 # Import modules
-from factfind.asset import AssetAnalyser, Asset, AssetsExtraction, AssetCategory
-from factfind.income import IncomeAnalyser, Income, IncomeExtraction, IncomeType, IncomeFrequency
-from factfind.basic import BasicFactAnalyser, BasicFactExtraction, MultipleApplicantsExtraction, MaritalStatus
+from tools.factfind.asset import AssetAnalyser, Asset, AssetsExtraction, AssetCategory
+from tools.factfind.income import IncomeAnalyser, Income, IncomeExtraction, IncomeType, IncomeFrequency
+from tools.factfind.basic import BasicFactAnalyser, BasicFactExtraction, MultipleApplicantsExtraction, MaritalStatus
 
 __all__ = [
     'AssetAnalyser', 'Asset', 'AssetsExtraction', 'AssetCategory',
