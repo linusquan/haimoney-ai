@@ -105,3 +105,6 @@ class TestExtractAndBasicAnalysis(unittest.TestCase):
         print(f"   Duration: {result.duration_seconds:.2f} seconds")
         print(f"   Successful extractions: {successful_extractions}/{len(result.extraction_results)}")
         print(f"   Output directory: {self.output_dir}")
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)
